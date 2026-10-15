@@ -1,0 +1,76 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write   # create releases on tags
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install Inno Setup
+        shell: pwsh
+        run: |
+          if (-not (Test-Path "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe")) { choco install innosetup -y --no-progress }
+
+      - name: Check the tag matches the app version
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: pwsh
+        run: |
+          $v = (python tools/make_version_info.py).Trim()
+          if ("v$v" -ne "${{ github.ref_name }}") { throw "Tag ${{ github.ref_name }} doesn't match VERSION $v in app.py" }
+
+      - name: Build exe, portable zip and installer
+        shell: pwsh
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File build.ps1 -Release
+
+      - name: Smoke test (starts, quits cleanly)
+        shell: pwsh
+        run: |
+          $p = Start-Process dist\Taskvane\Taskvane.exe -ArgumentList '--no-elevate' -PassThru
+          Start-Sleep 20
+          if ($p.HasExited) { Get-Content "$env:APPDATA\Taskvane\taskvane.log" -ErrorAction SilentlyContinue; throw "Taskvane exited early ($($p.ExitCode))" }
+          Start-Process dist\Taskvane\Taskvane.exe -ArgumentList '--quit' -Wait
+          Get-Content "$env:APPDATA\Taskvane\taskvane.log"
+          if (Select-String -Path "$env:APPDATA\Taskvane\taskvane.log" -Pattern 'Traceback|Unhandled exception') { throw "errors in log" }
+
+      - name: Checksums
+        shell: pwsh
+        run: |
+          Get-ChildItem release -File | Where-Object Name -ne SHA256SUMS.txt | ForEach-Object {
+            "{0}  {1}" -f (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower(), $_.Name
+          } | Set-Content -Encoding ascii release\SHA256SUMS.txt
+          Get-Content release\SHA256SUMS.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: taskvane-${{ github.sha }}
+          path: release/*
+
+      - name: Publish release
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $v = "${{ github.ref_name }}".TrimStart('v')
+          # release notes = this version's section of CHANGELOG.md
+          $log = Get-Content CHANGELOG.md -Raw
+          $m = [regex]::Match($log, "(?ms)^## $([regex]::Escape($v)).*?\r?\n(.*?)(?=^## |\z)")
+          $notes = $m.Groups[1].Value.Trim()
+          $notes += "`n`n**Download:** ``Taskvane-$v-Setup.exe`` (installer, recommended) or ``Taskvane-$v-Portable.zip`` (no install). Windows 10 1809+ / 11, 64-bit.`n`nIf SmartScreen warns, click **More info → Run anyway**. Verify downloads with ``SHA256SUMS.txt``."
+          Set-Content notes.md $notes
+          gh release create "${{ github.ref_name }}" release/* --title "Taskvane $v" --notes-file notes.md
