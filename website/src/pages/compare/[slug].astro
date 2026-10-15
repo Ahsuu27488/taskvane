@@ -1,0 +1,62 @@
+---
+import Page from '../../layouts/Page.astro';
+import { COMPARISONS, type Comparison } from '../../lib/compare';
+
+export function getStaticPaths() {
+  return COMPARISONS.map((c) => ({ params: { slug: c.slug }, props: { c } }));
+}
+const { c } = Astro.props as { c: Comparison };
+const cell = (v: string) =>
+  v === 'yes' ? { cls: 'yes', text: 'Yes' } : v === 'no' ? { cls: 'no', text: 'No' } : { cls: 'txt', text: v };
+---
+<Page
+  title={c.title}
+  h1={`Taskvane vs ${c.other}`}
+  lede={c.intro}
+  description={c.description}
+  crumbs={[{ name: 'Compare', path: '/compare/' }, { name: `vs ${c.other}`, path: `/compare/${c.slug}/` }]}
+  wide
+>
+  <div class="table-scroll">
+    <table>
+      <caption class="sr-only">Feature comparison of {c.other} and Taskvane</caption>
+      <thead><tr><th scope="col">Feature</th><th scope="col">{c.other}</th><th scope="col">Taskvane</th></tr></thead>
+      <tbody>
+        {c.rows.map(([what, o, t]) => {
+          const a = cell(o), b = cell(t);
+          return <tr><th scope="row">{what}</th><td class={a.cls}>{a.text}</td><td class={b.cls}>{b.text}</td></tr>;
+        })}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sides">
+    <section>
+      <h2>Where {c.other} is better</h2>
+      <ul>{c.otherWins.map((w) => <li>{w}</li>)}</ul>
+    </section>
+    <section>
+      <h2>Where Taskvane is better</h2>
+      <ul>{c.taskvaneWins.map((w) => <li>{w}</li>)}</ul>
+    </section>
+  </div>
+
+  <section class="verdict prose">
+    <h2>Which should you use?</h2>
+    <p>{c.verdict}</p>
+    <p><a class="btn btn-primary" href="/download/">Download Taskvane</a></p>
+    <p class="others">Other comparisons: {COMPARISONS.filter((x) => x.slug !== c.slug).map((x, i, a) => <><a href={`/compare/${x.slug}/`}>vs {x.other}</a>{i < a.length - 1 ? ', ' : ''}</>)}</p>
+  </section>
+</Page>
+
+<style>
+  table th[scope='row'] { font-weight: 500; }
+  td.txt { color: var(--slate); }
+  .sides { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin: 56px 0; }
+  .sides h2 { font-size: 34px; margin-bottom: 12px; }
+  .sides ul { padding-left: 1.2em; margin: 0; }
+  .sides li { margin: 0.5em 0; color: var(--slate); }
+  .verdict h2 { font-size: 34px; margin-bottom: 12px; }
+  .others { color: var(--slate); }
+  @media (max-width: 760px) { .sides { grid-template-columns: 1fr; gap: 32px; } }
+</style>

@@ -1,0 +1,38 @@
+---
+import Page from '../layouts/Page.astro';
+import { FAQ } from '../lib/faq';
+const schema = {
+  '@type': 'FAQPage',
+  mainEntity: FAQ.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+---
+<Page
+  title="Taskvane FAQ: CPU temperature, power draw, admin rights and more"
+  h1="Questions and answers"
+  lede="Short answers about what Taskvane shows, why it sometimes needs administrator rights, and how to install or remove it."
+  description="Answers about Taskvane: how to see CPU temperature on Windows 11, check laptop power draw in watts, why admin rights are needed, the PawnIO driver, and uninstalling."
+  crumbs={[{ name: 'FAQ', path: '/faq/' }]}
+  schema={[schema]}
+>
+  <div class="faq">
+    {FAQ.map((f) => (
+      <details>
+        <summary><h2>{f.q}</h2></summary>
+        <p>{f.a}</p>
+      </details>
+    ))}
+  </div>
+  <p class="more">Something else? <a href="https://github.com/Ahsuu27488/taskvane/issues/new/choose">Ask on GitHub</a>.</p>
+</Page>
+
+<style>
+  .faq { border-top: 1px solid var(--rule); }
+  details { border-bottom: 1px solid var(--rule); }
+  summary { list-style: none; cursor: pointer; padding: 20px 40px 20px 0; position: relative; }
+  summary::-webkit-details-marker { display: none; }
+  summary h2 { font-size: 21px; font-stretch: 100%; line-height: 1.35; font-weight: 650; margin: 0; letter-spacing: 0; }
+  summary::after { content: ''; position: absolute; right: 6px; top: 28px; width: 10px; height: 10px; border-right: 2px solid var(--slate); border-bottom: 2px solid var(--slate); transform: rotate(45deg); transition: transform .15s; }
+  details[open] summary::after { transform: rotate(-135deg); top: 32px; }
+  details p { margin: -4px 0 24px; color: var(--slate); }
+  .more { margin-top: 32px; }
+</style>

@@ -1,0 +1,221 @@
+---
+import Base from '../layouts/Base.astro';
+import Shot from '../components/Shot.astro';
+import ThermalScale from '../components/ThermalScale.astro';
+import { SITE, getRelease, mb } from '../lib/site';
+
+const rel = await getRelease();
+
+const features = [
+  {
+    shot: 'sensors',
+    alt: 'Taskvane Sensors page listing each CPU core temperature with Normal, Warm and Hot labels, plus CPU package power',
+    title: 'Every core, not a guess',
+    body: [
+      'See the temperature of each CPU core and the package, the GPU core and its hot spot, and your SSDs, with the minimum and maximum since you opened the app.',
+      'Each reading is labelled Normal, Warm, Hot or Critical, so you know at a glance whether something is wrong.',
+    ],
+    link: { href: '/features/#temperatures', text: 'How temperatures work' },
+  },
+  {
+    shot: 'power',
+    alt: 'Taskvane Power page with a power draw chart in watts and battery capacity versus design capacity',
+    title: 'Know where your watts go',
+    body: [
+      "On battery, Taskvane shows the whole laptop's power draw in watts and how long the charge will last at that rate. With admin rights it adds CPU and GPU package power.",
+      'It also shows battery health: how much charge your battery can still hold compared with when it was new.',
+    ],
+    link: { href: '/features/#power', text: 'About power readings' },
+  },
+  {
+    shot: 'processes',
+    alt: 'Taskvane process list grouped by app, showing CPU, memory and disk use per app',
+    title: 'Apps, not a wall of processes',
+    body: [
+      'Processes are grouped under the app\'s real name, like "Google Chrome" rather than 25 copies of chrome.exe, with combined CPU, memory and disk.',
+      'Right-click to end a task or a whole process tree, change priority, open the file location or see details. Startup apps get their own page.',
+    ],
+    link: { href: '/features/#processes', text: 'Process tools' },
+  },
+  {
+    shot: 'performance',
+    alt: 'Taskvane Performance page with a CPU usage graph, per-core load and real clock speed',
+    title: 'Look back an hour, not a minute',
+    body: [
+      'Performance graphs for CPU, memory, every GPU, disk, network and power go back up to an hour. Hover anywhere to read the exact value at that moment.',
+      'Export the last hour as a CSV file when you need to prove a problem or compare runs.',
+    ],
+    link: { href: '/features/#performance', text: 'Performance graphs' },
+  },
+];
+
+const app = {
+  '@type': 'SoftwareApplication',
+  '@id': `${SITE.url}/#app`,
+  name: 'Taskvane',
+  alternateName: 'Taskvane Task Manager',
+  description: SITE.description,
+  url: `${SITE.url}/`,
+  applicationCategory: 'UtilitiesApplication',
+  applicationSubCategory: 'System monitor',
+  operatingSystem: 'Windows 11, Windows 10',
+  softwareVersion: rel.version,
+  datePublished: rel.date || undefined,
+  downloadUrl: rel.setup.url,
+  installUrl: `${SITE.url}/download/`,
+  fileSize: mb(rel.setup.size) || undefined,
+  license: 'https://www.gnu.org/licenses/gpl-3.0.html',
+  isAccessibleForFree: true,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  screenshot: `${SITE.url}/img/overview-1600.webp`,
+  image: `${SITE.url}/img/logo-512.png`,
+  author: { '@id': `${SITE.url}/about/#person` },
+  codeRepository: SITE.repo,
+  featureList: [
+    'CPU core and package temperature',
+    'GPU core and hot-spot temperature',
+    'Power draw in watts',
+    'Battery health and wear',
+    'Processes grouped by app',
+    'Startup apps manager',
+    'Temperature and resource alerts',
+    'Always-on-top mini widget',
+    'One-hour history graphs and CSV export',
+  ],
+};
+---
+<Base
+  title="Taskvane: a better Task Manager for Windows 11, with temperatures and power draw"
+  description={SITE.description}
+  schema={[app]}
+>
+  <section class="hero">
+    <div class="wrap grid">
+      <div class="copy">
+        <h1>A better Task Manager for Windows&nbsp;11</h1>
+        <p class="lede">Taskvane shows what Task Manager does, plus the things it leaves out: CPU and GPU temperatures, power draw in watts and battery health. It's free, open source, and light enough to leave running.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href={rel.setup.url}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>
+            Download for Windows
+          </a>
+          <a class="btn btn-quiet" href={SITE.repo}>View source on GitHub</a>
+        </div>
+        <p class="meta">Version {rel.version}{rel.setup.size ? `, ${mb(rel.setup.size)}` : ''}. For Windows 10 and 11, 64-bit. <a href="/download/">Portable version and checksums</a></p>
+      </div>
+      <div class="visual">
+        <Shot name="overview" alt="Taskvane overview showing CPU at 78 °C, memory, GPU and 26 W power draw with an activity chart" eager />
+      </div>
+    </div>
+  </section>
+
+  <ThermalScale />
+
+  <section class="features" aria-label="What Taskvane shows">
+    <div class="wrap">
+      {features.map((f, i) => (
+        <article class={`feature ${i % 2 ? 'flip' : ''}`}>
+          <div class="f-copy">
+            <h2>{f.title}</h2>
+            {f.body.map((p) => <p>{p}</p>)}
+            <a href={f.link.href}>{f.link.text}</a>
+          </div>
+          <div class="f-shot"><Shot name={f.shot} alt={f.alt} crop /></div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="light">
+    <div class="wrap light-grid">
+      <h2>Built to stay out of the way</h2>
+      <div class="prose">
+        <p>A monitor that slows your PC down defeats the point. With the window open, Taskvane uses about <strong class="num">0.4%</strong> of the CPU on a 2019 laptop.</p>
+        <p>It reads every process in a single Windows system call, the same source Task Manager uses, instead of opening each one. Hardware sensors run in a separate helper process, so a misbehaving driver can't freeze the window.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="compare">
+    <div class="wrap">
+      <h2>Taskvane next to Task Manager</h2>
+      <p class="sub">Task Manager is still great for services and per-app network use. Taskvane covers the hardware side it skips.</p>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th scope="col">What you can see</th><th scope="col" class="c">Task Manager</th><th scope="col" class="c">Taskvane</th></tr></thead>
+          <tbody>
+            <tr><td>CPU, memory, disk, network and GPU usage</td><td class="c yes">Yes</td><td class="c yes">Yes</td></tr>
+            <tr><td>CPU core and package temperature</td><td class="c no">No</td><td class="c yes">Yes</td></tr>
+            <tr><td>GPU temperature</td><td class="c part">Dedicated GPUs only</td><td class="c yes">Yes, plus hot spot</td></tr>
+            <tr><td>Power draw in watts</td><td class="c no">No</td><td class="c yes">Yes</td></tr>
+            <tr><td>Battery health and time left at the current draw</td><td class="c no">No</td><td class="c yes">Yes</td></tr>
+            <tr><td>Alerts for heat, memory and low battery</td><td class="c no">No</td><td class="c yes">Yes</td></tr>
+            <tr><td>History graphs</td><td class="c part">Last 60 seconds</td><td class="c yes">Up to 1 hour, with CSV export</td></tr>
+            <tr><td>Always-on-top mini widget</td><td class="c no">No</td><td class="c yes">Yes</td></tr>
+            <tr><td>Services, users and per-app network use</td><td class="c yes">Yes</td><td class="c no">No</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>More detail: <a href="/compare/task-manager/">Taskvane vs Task Manager</a>, <a href="/compare/hwinfo/">vs HWiNFO</a> and <a href="/compare/librehardwaremonitor/">vs LibreHardwareMonitor</a>.</p>
+    </div>
+  </section>
+
+  <section class="get">
+    <div class="wrap"><div class="get-grid">
+      <div>
+        <h2>Free, and yours to inspect</h2>
+        <p>No ads, no account, no telemetry. The full source is on GitHub under the GPL-3.0 license, and every release lists SHA-256 checksums.</p>
+      </div>
+      <div class="get-actions">
+        <a class="btn btn-primary" href={rel.setup.url}>Download Taskvane {rel.version}</a>
+        <a class="btn btn-quiet" href="/download/">Other downloads</a>
+      </div>
+    </div></div>
+  </section>
+</Base>
+
+<style>
+  .hero { padding: 64px 0 88px; overflow: hidden; }
+  .grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 56px; align-items: center; }
+  .copy h1 { margin-bottom: 24px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 32px 0 18px; }
+  .meta { font-size: 15px; color: var(--slate); }
+  /* the screenshot runs off the right edge of the page */
+  .visual { margin-right: calc(-1 * var(--gutter) - 12vw); }
+
+  .features { padding: 104px 0 24px; }
+  .feature { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 56px; align-items: center; margin-bottom: 112px; }
+  .feature.flip { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+  .feature.flip .f-copy { order: 2; }
+  .f-copy h2 { margin-bottom: 20px; }
+  .f-copy p { color: var(--slate); max-width: 30em; }
+  .f-copy a { font-weight: 600; }
+
+  .light { padding: 72px 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+  .light-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 56px; }
+  .light strong { font-size: 1.15em; }
+
+  .compare { padding: 96px 0 24px; }
+  .compare .sub { color: var(--slate); margin: 16px 0 0; max-width: 36em; }
+
+  .get { padding: 72px 0 0; }
+  .get-grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 40px; align-items: end; padding: 48px; background: var(--ink); color: #e8eef5; border-radius: var(--radius-lg); }
+  .get h2 { color: #fff; margin-bottom: 16px; }
+  .get p { color: #b9c6d4; margin: 0; max-width: 34em; }
+  .get-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end; }
+  .get .btn-quiet { color: #fff; border-color: #4a5c70; }
+  .get .btn-quiet:hover { border-color: #fff; color: #fff; }
+  .get .btn-primary { background: #3987e5; }
+  .get .btn-primary:hover { background: #5a9cec; }
+
+  @media (max-width: 900px) {
+    .grid, .feature, .light-grid, .get-grid { grid-template-columns: 1fr; gap: 32px; }
+    .visual { margin-right: 0; }
+    .feature.flip { grid-template-columns: 1fr; }
+    .feature.flip .f-copy { order: 0; }
+    .feature { margin-bottom: 80px; }
+    .get-grid { padding: 32px 24px; }
+    .get-actions { justify-content: flex-start; }
+    .hero { padding-top: 40px; }
+  }
+</style>

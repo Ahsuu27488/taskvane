@@ -1,0 +1,56 @@
+---
+import Page from '../layouts/Page.astro';
+import { SITE, getRelease, mb } from '../lib/site';
+const rel = await getRelease();
+---
+<Page
+  title={`Download Taskvane ${rel.version} for Windows 11 and 10 (free)`}
+  h1="Download Taskvane"
+  lede={`Version ${rel.version}${rel.date ? `, released ${new Date(rel.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}` : ''}. Free and open source, for Windows 10 (1809 or later) and Windows 11, 64-bit.`}
+  description={`Download Taskvane ${rel.version}, a free Task Manager alternative for Windows 11 and 10 with CPU and GPU temperatures and power draw. Installer or portable zip, with SHA-256 checksums.`}
+  crumbs={[{ name: 'Download', path: '/download/' }]}
+  wide
+>
+  <div class="choices">
+    <section class="choice main">
+      <h2>Installer</h2>
+      <p>Recommended. Adds Taskvane to the Start menu, can set up CPU sensors for you, and can be removed from Settings &gt; Apps.</p>
+      <a class="btn btn-primary" href={rel.setup.url}>Download {rel.setup.name}</a>
+      <p class="size num">{mb(rel.setup.size)}</p>
+    </section>
+    <section class="choice">
+      <h2>Portable</h2>
+      <p>Nothing to install. Unzip anywhere, run <code>Taskvane.exe</code>, and delete the folder when you're done. Settings stay in the folder.</p>
+      <a class="btn btn-quiet" href={rel.portable.url}>Download {rel.portable.name}</a>
+      <p class="size num">{mb(rel.portable.size)}</p>
+    </section>
+  </div>
+
+  <div class="prose notes">
+    <h2>If Windows says "Windows protected your PC"</h2>
+    <p>Taskvane isn't code-signed yet, so Microsoft SmartScreen warns about it the first time you run it. Click <strong>More info</strong>, then <strong>Run anyway</strong>. This is common for new open-source apps, and it goes away once the app is signed.</p>
+    <p>To confirm your download is the genuine file, compare its SHA-256 checksum with the one in <a href={rel.checksums}>SHA256SUMS.txt</a>:</p>
+    <pre><code>Get-FileHash .\{rel.setup.name} -Algorithm SHA256</code></pre>
+
+    <h2>Turning on CPU temperature and power</h2>
+    <p>Windows only shows CPU sensors to apps running as administrator, through a signed driver called PawnIO. The installer offers to set this up. In the portable version, click <strong>Enable CPU sensors</strong> in the app; it asks for permission once. <a href="/docs/#cpu-sensors">More about how this works</a>.</p>
+
+    <h2>Build it yourself</h2>
+    <p>Prefer not to run a downloaded exe? The full source is on <a href={SITE.repo}>GitHub</a>, with build instructions in the README.</p>
+
+    <h2>Previous versions</h2>
+    <p>Every release, with notes and checksums, is on the <a href={`${SITE.repo}/releases`}>GitHub releases page</a>. See what changed in the <a href="/changelog/">changelog</a>.</p>
+  </div>
+</Page>
+
+<style>
+  .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 64px; }
+  .choice { padding: 32px; border: 1px solid var(--rule); border-radius: var(--radius-lg); background: var(--paper); }
+  .choice.main { border-color: var(--blue); box-shadow: 0 0 0 1px var(--blue); }
+  .choice h2 { font-size: 34px; margin-bottom: 12px; }
+  .choice p { color: var(--slate); max-width: 30em; }
+  .choice .btn { margin-top: 8px; word-break: break-all; }
+  .size { font-size: 15px; margin: 12px 0 0; }
+  .notes h2:first-child { margin-top: 0; }
+  @media (max-width: 760px) { .choices { grid-template-columns: 1fr; } .choice { padding: 24px; } }
+</style>

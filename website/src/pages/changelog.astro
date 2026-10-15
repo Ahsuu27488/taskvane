@@ -1,0 +1,32 @@
+---
+import { existsSync, readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import Page from '../layouts/Page.astro';
+
+// Rendered from the repo's CHANGELOG.md, so the site updates with each release.
+const path = [resolve(process.cwd(), '..', 'CHANGELOG.md'), resolve(process.cwd(), 'CHANGELOG.md')].find((p) => existsSync(p));
+const md = path ? readFileSync(path, 'utf8') : '';
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const inline = (s: string) => esc(s).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/`(.+?)`/g, '<code>$1</code>');
+const html: string[] = [];
+let inList = false;
+for (const line of md.split(/\r?\n/).slice(1)) {        // skip the "# Changelog" title
+  const li = /^- (.*)/.exec(line);
+  if (li) { if (!inList) { html.push('<ul>'); inList = true; } html.push(`<li>${inline(li[1])}</li>`); continue; }
+  if (inList) { html.push('</ul>'); inList = false; }
+  const h = /^## (.*)/.exec(line);
+  if (h) html.push(`<h2>${inline(h[1])}</h2>`);
+  else if (line.trim()) html.push(`<p>${inline(line)}</p>`);
+}
+if (inList) html.push('</ul>');
+---
+<Page
+  title="Taskvane changelog: what's new in each version"
+  h1="Changelog"
+  lede="What changed in each version of Taskvane."
+  description="Release notes for Taskvane, the free Task Manager alternative for Windows 11 and 10."
+  crumbs={[{ name: 'Changelog', path: '/changelog/' }]}
+>
+  <Fragment set:html={html.join('\n')} />
+  <p><a href="https://github.com/Ahsuu27488/taskvane/releases">All releases on GitHub</a></p>
+</Page>

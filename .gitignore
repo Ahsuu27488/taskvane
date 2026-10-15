@@ -1,11 +1,11 @@
 # build output
-build/
-dist/
-release/
+/build/
+/dist/
+/release/
 *.spec
 
 # third-party binaries: fetched and hash-verified by tools/fetch_deps.ps1
-lib/
+/lib/
 
 # python
 __pycache__/
@@ -15,7 +15,7 @@ venv/
 
 # local scratch / test captures
 .deps/
-data/
+/data/
 *.log
 
 # editors / OS

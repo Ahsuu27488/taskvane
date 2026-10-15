@@ -1,0 +1,117 @@
+---
+import Page from '../layouts/Page.astro';
+import { SITE } from '../lib/site';
+
+const projects = [
+  {
+    name: 'Physical AI & Humanoid Robotics textbook',
+    what: 'An AI-native textbook with a RAG-powered chatbot that answers questions from the book, content personalization and Urdu translation.',
+    stack: 'Docusaurus, FastAPI, RAG',
+    live: 'https://ahsuu27488.github.io/physical-ai-textbook/',
+    code: 'https://github.com/Ahsuu27488/physical-ai-textbook',
+  },
+  {
+    name: 'Chronos: Evolution of Todo',
+    what: 'A full-stack task app built in five phases, from a console script to a real-time web app with recurring tasks and authentication.',
+    stack: 'Next.js 15, FastAPI, Neon PostgreSQL',
+    live: 'https://evolution-of-todo-tau.vercel.app',
+    code: 'https://github.com/Ahsuu27488/evolution-of-todo',
+  },
+  {
+    name: 'Edit Recreator',
+    what: 'A Claude Code skill and plugin that recreates any short-form video edit (TikTok, Reels, CapCut, After Effects) frame by frame in Remotion with your own footage.',
+    stack: 'Python, Remotion, Claude Code',
+    code: 'https://github.com/Ahsuu27488/edit-recreator',
+  },
+  {
+    name: 'PCAO-F study pack',
+    what: 'A complete exam study pack: seven domains, ten crash courses, flashcards, 180 questions and a timed mock test, in English, Roman Urdu and Urdu.',
+    stack: 'HTML, CSS, JavaScript',
+    live: 'https://tinyurl.com/pcao-f',
+    code: 'https://github.com/Ahsuu27488/pcao-f-study-pack',
+  },
+  {
+    name: 'Furniro',
+    what: 'A responsive furniture e-commerce store with product search, cart and checkout, built for the Governor IT Initiative UI/UX hackathon.',
+    stack: 'Next.js, TypeScript, Tailwind CSS',
+    live: 'http://furniro-hackathon.netlify.app/',
+    code: 'https://github.com/Ahsuu27488/ui-ux-hackathon',
+  },
+  {
+    name: 'Lead lifecycle overview',
+    what: 'A lead management system with role-based workflows for moving leads through each stage.',
+    stack: 'TypeScript',
+    live: 'https://lead-lifecycle-overview000.netlify.app/',
+    code: 'https://github.com/Ahsuu27488/lead-lifecycle-overview',
+  },
+  {
+    name: 'GameLoop tools',
+    what: 'Small Windows utilities for PUBG Mobile players: copy a whole keymapping between game builds, and make WASD direction changes instant.',
+    stack: 'PowerShell',
+    code: 'https://github.com/Ahsuu27488/pubgm-flash-keymapping-gameloop',
+  },
+];
+
+const person = {
+  '@type': 'ProfilePage',
+  mainEntity: { '@id': `${SITE.url}/about/#person` },
+};
+const personDetail = {
+  '@type': 'Person',
+  '@id': `${SITE.url}/about/#person`,
+  name: SITE.author.name,
+  jobTitle: 'Software developer',
+  knowsAbout: ['Python', 'TypeScript', 'Next.js', 'FastAPI', 'Windows development', 'AI applications', 'RAG chatbots'],
+  memberOf: { '@type': 'Organization', name: 'Panaverse', url: 'https://github.com/panaverse' },
+};
+---
+<Page
+  title="About Muhammad Ahsan, the developer of Taskvane"
+  h1="Made by Muhammad Ahsan"
+  lede="I'm a software developer from Nawabshah, Pakistan, building web apps, AI tools and Windows utilities. Taskvane is my latest project."
+  description="Muhammad Ahsan is a software developer from Nawabshah, Pakistan, and the creator of Taskvane. Projects include a RAG-powered AI textbook, full-stack web apps and Windows utilities."
+  crumbs={[{ name: 'About', path: '/about/' }]}
+  schema={[person, personDetail]}
+  wide
+>
+  <div class="intro prose">
+    <h2>Why Taskvane exists</h2>
+    <p>My laptop runs hot, and Task Manager couldn't tell me how hot, or how much power it was pulling. Getting those numbers meant running two or three separate tools next to Task Manager. So I built one app that shows usage, temperatures and power together, stays light enough to leave open, and explains what the numbers mean.</p>
+    <p>Taskvane is open source because a tool that asks for administrator rights and installs a driver should be one you can inspect. The code, issues and releases are all on <a href={SITE.repo}>GitHub</a>.</p>
+  </div>
+
+  <section class="work">
+    <h2>Other things I've built</h2>
+    <ul class="projects">
+      {projects.map((p) => (
+        <li>
+          <h3>{p.name}</h3>
+          <p>{p.what}</p>
+          <p class="stack">{p.stack}</p>
+          <p class="links">
+            {p.live && <a href={p.live}>Live site</a>}
+            <a href={p.code}>Source code</a>
+          </p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="contact prose">
+    <h2>Get in touch</h2>
+    <p>Find all my projects on <a href={SITE.author.github}>GitHub</a>. For Taskvane bugs and ideas, <a href={`${SITE.repo}/issues/new/choose`}>open an issue</a>; I read every one.</p>
+  </section>
+</Page>
+
+<style>
+  .intro, .contact { margin-bottom: 72px; }
+  .work { margin-bottom: 72px; }
+  .work > h2 { margin-bottom: 28px; }
+  .projects { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 48px; border-top: 1px solid var(--rule); }
+  .projects li { padding: 24px 0 20px; border-bottom: 1px solid var(--rule); }
+  .projects h3 { margin-bottom: 8px; }
+  .projects p { color: var(--slate); margin: 0 0 8px; max-width: 34em; }
+  .projects .stack { font-size: 15px; color: var(--ink); }
+  .projects .links { display: flex; gap: 18px; font-size: 15px; font-weight: 600; margin: 0; }
+  @media (max-width: 760px) { .projects { grid-template-columns: 1fr; } }
+</style>

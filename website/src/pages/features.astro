@@ -1,0 +1,48 @@
+---
+import Page from '../layouts/Page.astro';
+import Shot from '../components/Shot.astro';
+---
+<Page
+  title="Taskvane features: temperatures, power draw, processes and alerts for Windows"
+  h1="What Taskvane shows you"
+  lede="Everything Task Manager covers for apps and usage, plus the hardware readings it leaves out. Here's each part of the app and what it's for."
+  description="Taskvane features: CPU and GPU temperatures, power draw in watts, battery health, processes grouped by app, startup apps, one-hour history graphs, alerts and an always-on-top mini widget for Windows 11 and 10."
+  crumbs={[{ name: 'Features', path: '/features/' }]}
+>
+  <h2 id="overview">Overview</h2>
+  <p>The first screen answers "is my PC okay?" in one glance: CPU, memory, GPU and power tiles with short history lines, an activity chart, the hottest temperatures and the apps using the most resources.</p>
+  <p>Above them, plain-language notes call out anything unusual, like an app using 8 GB of memory, a CPU running warm, memory almost full or a drive running out of space.</p>
+  <Shot name="overview" alt="Taskvane overview with CPU, memory, GPU and power tiles and plain-language notes" crop />
+
+  <h2 id="temperatures">Temperatures</h2>
+  <p>Taskvane reads the same sensors as LibreHardwareMonitor: every CPU core and the CPU package, the GPU core and its hot spot (the hottest point on the chip), and SSD temperatures. Each reading is labelled Normal, Warm, Hot or Critical, with the lowest and highest values since the app opened.</p>
+  <p>GPU temperatures work straight away. CPU and drive temperatures need administrator mode, because Windows only exposes them to elevated apps; see <a href="/docs/#cpu-sensors">how to turn them on</a>.</p>
+  <Shot name="sensors" alt="Taskvane sensors with per-core CPU temperatures, status labels, minimum and maximum" crop />
+
+  <h2 id="power">Power and battery</h2>
+  <p>On battery, Taskvane shows the whole laptop's power draw in watts, measured at the battery, and how long the charge will last at that rate. Plugged in, Windows doesn't report whole-system power, so Taskvane shows CPU and GPU package power instead (administrator mode).</p>
+  <p>The Power page also shows battery health: the capacity your battery holds now compared with its design capacity, plus wear and voltage, and the energy used on battery since you opened the app.</p>
+  <Shot name="power" alt="Taskvane Power page with a power draw chart and battery capacity compared with design" crop />
+
+  <h2 id="processes">Processes and startup apps</h2>
+  <p>Processes are grouped under the app's real name, taken from the program itself: "Google Chrome" instead of 25 copies of chrome.exe. Expand a group to see each process. Sort by CPU, memory or disk, or search by name, process ID, user or file path.</p>
+  <p>Right-click any app to end it or its whole process tree, change its priority, open its file location, search for it online or see details like its command line and memory breakdown. The Startup apps page turns startup entries on or off the same way Task Manager does.</p>
+  <Shot name="processes" alt="Taskvane process list grouped by app with CPU, memory and disk columns" crop />
+
+  <h2 id="performance">Performance graphs</h2>
+  <p>Separate graphs for the CPU (with load and clock speed per core), memory, each GPU, disk, network and power. Switch between the last minute, 5 minutes, 15 minutes or hour, and hover anywhere on a graph to read the exact values at that moment.</p>
+  <p>Export the last hour to a CSV file from Settings to keep a record or compare two runs.</p>
+  <Shot name="performance" alt="Taskvane Performance page with CPU graph, statistics and per-core load" crop />
+
+  <h2 id="alerts">Alerts and the mini widget</h2>
+  <p>Taskvane can send a Windows notification when the CPU or GPU gets too hot, memory fills up, the battery runs low, or the CPU stays busy for over a minute. You set each threshold, and each alert repeats at most every 10 minutes.</p>
+  <p>The mini widget is a small always-on-top panel with CPU, memory, GPU, power and battery, for keeping an eye on things during a game or a long export. The notification-area icon can show a live number too.</p>
+
+  <h2 id="lightweight">Lightweight by design</h2>
+  <p>Taskvane uses about 0.4% of the CPU with its window open. It reads all process statistics in one Windows system call, the same source Task Manager uses, and hardware sensors run in a separate helper process that restarts itself if a driver misbehaves.</p>
+  <p><a class="btn btn-primary" href="/download/">Download Taskvane</a></p>
+</Page>
+
+<style>
+  .body :global(.shot) { margin: 28px 0 8px; }
+</style>

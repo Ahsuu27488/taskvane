@@ -1,0 +1,153 @@
+---
+// Interactive CPU temperature ruler. Bands match the app's own thresholds
+// (tempStatus in ui/app.js with hot = 85): <70 Normal, 70–84 Warm, 85–94 Hot, ≥95 Critical.
+const MIN = 30, MAX = 105;
+const pct = (t: number) => ((t - MIN) / (MAX - MIN)) * 100;
+const ticks = Array.from({ length: (MAX - MIN) / 5 + 1 }, (_, i) => MIN + i * 5);
+const moments = [
+  { t: 42, text: 'Idle laptop' },
+  { t: 62, text: 'Browsing, video calls' },
+  { t: 82, text: 'Gaming, exporting video' },
+  { t: 100, text: 'Throttling' },
+];
+---
+<section class="thermal" aria-labelledby="thermal-h">
+  <div class="wrap">
+    <div class="head">
+      <h2 id="thermal-h">How hot is too hot?</h2>
+      <p>Task Manager can't tell you. Drag the marker to see what your CPU temperature means and how Taskvane would show it.</p>
+    </div>
+
+    <div class="instrument">
+      <div class="readout" aria-live="polite">
+        <span class="temp num"><span data-temp>82</span> °C</span>
+        <span class="state" data-state>Warm</span>
+        <p class="why" data-why>Typical while gaming or exporting video. Fans spin up, and that's expected.</p>
+      </div>
+
+      <div class="ruler">
+        <ul class="moments" aria-hidden="true">
+          {moments.map((m) => <li style={`left:${pct(m.t)}%`}>{m.text}</li>)}
+        </ul>
+        <div class="bands" aria-hidden="true">
+          <span class="b-normal" style={`width:${pct(70)}%`}></span>
+          <span class="b-warm" style={`width:${pct(85) - pct(70)}%`}></span>
+          <span class="b-hot" style={`width:${pct(95) - pct(85)}%`}></span>
+          <span class="b-crit" style={`width:${100 - pct(95)}%`}></span>
+        </div>
+        <ol class="ticks num" aria-hidden="true">
+          {ticks.map((t) => <li style={`left:${pct(t)}%`} class={t % 10 === 0 ? 'major' : ''}>{t % 10 === 0 ? t : ''}</li>)}
+        </ol>
+        <label class="sr-only" for="cpu-temp">CPU temperature in degrees Celsius</label>
+        <input id="cpu-temp" type="range" min={MIN} max={MAX} step="1" value="82" />
+      </div>
+
+      <dl class="legend">
+        <div><dt><i class="b-normal"></i>Normal</dt><dd>below 70 °C</dd></div>
+        <div><dt><i class="b-warm"></i>Warm</dt><dd>70 to 84 °C</dd></div>
+        <div><dt><i class="b-hot"></i>Hot</dt><dd>85 to 94 °C</dd></div>
+        <div><dt><i class="b-crit"></i>Critical</dt><dd>95 °C and up</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<script>
+  const input = document.getElementById('cpu-temp') as HTMLInputElement;
+  const root = input.closest('.thermal') as HTMLElement;
+  const out = { temp: root.querySelector('[data-temp]')!, state: root.querySelector('[data-state]')!, why: root.querySelector('[data-why]')! };
+
+  const describe = (t: number) => {
+    if (t >= 95) return ['Critical', 'crit', 'At the limit. Most CPUs throttle around 100 °C to protect themselves, so performance drops. Taskvane alerts you well before this.'];
+    if (t >= 85) return ['Hot', 'hot', 'Sustained heavy load. Safe for short bursts, but check your cooling if it stays here.'];
+    if (t >= 70) return ['Warm', 'warm', "Typical while gaming or exporting video. Fans spin up, and that's expected."];
+    if (t >= 50) return ['Normal', 'normal', 'Everyday work: browsing, documents, video calls.'];
+    return ['Normal', 'normal', 'Idle or light use. Your PC is barely working.'];
+  };
+
+  const render = () => {
+    const t = Number(input.value);
+    const [label, key, why] = describe(t);
+    out.temp.textContent = String(t);
+    out.state.textContent = label;
+    out.why.textContent = why;
+    root.dataset.state = key;
+    input.setAttribute('aria-valuetext', `${t} degrees Celsius, ${label}`);
+    input.style.setProperty('--p', `${((t - 30) / 75) * 100}%`);
+  };
+  input.addEventListener('input', render);
+  render();
+
+  // One orchestrated moment: sweep from idle to the gaming range the first time the scale comes into view.
+  const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!still && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      if (!entries[0].isIntersecting) return;
+      io.disconnect();
+      const from = 42, to = 82, dur = 1400, t0 = performance.now();
+      const step = (now: number) => {
+        const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+        input.value = String(Math.round(from + (to - from) * e));
+        render();
+        if (k < 1 && !input.matches(':active')) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }, { threshold: 0.6 });
+    io.observe(root);
+  }
+</script>
+
+<style>
+  .thermal { padding: 88px 0; background: var(--paper); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+  .head { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 48px; align-items: end; margin-bottom: 40px; }
+  .head p { color: var(--slate); max-width: 30em; margin: 0; }
+
+  .instrument { --normal: var(--cool); --warm-c: var(--warm); --hot-c: var(--hot); --crit-c: var(--crit); }
+  .readout { display: grid; grid-template-columns: auto auto 1fr; align-items: baseline; gap: 4px 20px; margin-bottom: 28px; min-height: 96px; }
+  .temp { font-size: clamp(56px, 9vw, 104px); font-weight: 700; font-stretch: 75%; line-height: 0.9; letter-spacing: -0.03em; }
+  .state { font-weight: 650; font-size: 22px; padding: 6px 14px; border-radius: 999px; color: #fff; background: var(--cool); transition: background-color .2s; }
+  .why { color: var(--slate); margin: 0; max-width: 32em; align-self: center; }
+  .thermal[data-state='warm'] .state { background: #c98500; }
+  .thermal[data-state='hot'] .state { background: var(--hot); }
+  .thermal[data-state='crit'] .state { background: var(--crit); }
+
+  .ruler { position: relative; padding-top: 44px; }
+  .moments { list-style: none; margin: 0; padding: 0; position: absolute; inset: 0 0 auto 0; height: 36px; }
+  .moments li { position: absolute; top: 0; transform: translateX(-50%); font-size: 14px; color: var(--slate); white-space: nowrap; padding-bottom: 10px; }
+  .moments li::after { content: ''; position: absolute; left: 50%; bottom: -6px; width: 1px; height: 12px; background: var(--slate); opacity: .5; }
+  .moments li:last-child { transform: translateX(-80%); }
+  .moments li:last-child::after { left: 80%; }
+  .bands { display: flex; height: 14px; border-radius: 7px; overflow: hidden; }
+  .b-normal { background: var(--cool); }
+  .b-warm { background: var(--warm); }
+  .b-hot { background: var(--hot); }
+  .b-crit { background: var(--crit); }
+  .ticks { list-style: none; margin: 0; padding: 0; position: relative; height: 30px; }
+  .ticks li { position: absolute; top: 0; transform: translateX(-50%); font-size: 13px; color: var(--slate); padding-top: 12px; }
+  .ticks li::before { content: ''; position: absolute; left: 50%; top: 2px; width: 1px; height: 6px; background: #8a99aa; }
+  .ticks li.major::before { height: 10px; background: var(--ink); }
+
+  /* the range input sits over the bands; its thumb is the marker */
+  input[type='range'] { position: absolute; left: 0; right: 0; top: 34px; width: 100%; height: 34px; margin: 0; background: transparent; -webkit-appearance: none; appearance: none; cursor: ew-resize; }
+  input[type='range']::-webkit-slider-runnable-track { height: 34px; background: transparent; }
+  input[type='range']::-moz-range-track { height: 34px; background: transparent; }
+  input[type='range']::-webkit-slider-thumb { -webkit-appearance: none; width: 6px; height: 34px; border-radius: 3px; background: var(--ink); box-shadow: 0 0 0 3px var(--paper); }
+  input[type='range']::-moz-range-thumb { width: 6px; height: 34px; border: 0; border-radius: 3px; background: var(--ink); box-shadow: 0 0 0 3px var(--paper); }
+  input[type='range']:focus-visible { outline: none; }
+  input[type='range']:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 3px var(--paper), 0 0 0 6px var(--blue); }
+  input[type='range']:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 3px var(--paper), 0 0 0 6px var(--blue); }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 12px 32px; margin: 28px 0 0; font-size: 15px; }
+  .legend div { display: flex; gap: 8px; align-items: baseline; }
+  .legend dt { font-weight: 650; display: flex; align-items: center; gap: 8px; }
+  .legend dd { margin: 0; color: var(--slate); }
+  .legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+
+  @media (max-width: 760px) {
+    .head { grid-template-columns: 1fr; }
+    .readout { grid-template-columns: auto 1fr; }
+    .why { grid-column: 1 / -1; }
+    .moments li { font-size: 12px; }
+    .moments li:nth-child(2) { display: none; }
+  }
+</style>

@@ -1,0 +1,47 @@
+---
+import Base from './Base.astro';
+import { SITE } from '../lib/site';
+
+interface Props {
+  title: string;          // <title>
+  h1: string;
+  lede?: string;
+  description: string;
+  crumbs?: { name: string; path: string }[];  // excluding Home
+  schema?: object[];
+  wide?: boolean;
+}
+const { title, h1, lede, description, crumbs = [], schema = [], wide = false } = Astro.props;
+const breadcrumb = {
+  '@type': 'BreadcrumbList',
+  itemListElement: [{ name: 'Taskvane', path: '/' }, ...crumbs].map((c, i) => ({
+    '@type': 'ListItem', position: i + 1, name: c.name, item: new URL(c.path, SITE.url).href,
+  })),
+};
+---
+<Base title={title} description={description} schema={[breadcrumb, ...schema]}>
+  <article class="page wrap">
+    {crumbs.length > 1 && (
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        {crumbs.slice(0, -1).map((c) => <><span aria-hidden="true">/</span><a href={c.path}>{c.name}</a></>)}
+      </nav>
+    )}
+    <header class="page-head">
+      <h1>{h1}</h1>
+      {lede && <p class="lede">{lede}</p>}
+    </header>
+    <div class={wide ? 'body' : 'body prose'}>
+      <slot />
+    </div>
+  </article>
+</Base>
+
+<style>
+  .page { padding-top: 56px; }
+  .crumbs { font-size: 15px; color: var(--slate); display: flex; gap: 8px; margin-bottom: 20px; }
+  .crumbs a { color: var(--slate); }
+  .page-head { margin-bottom: 40px; max-width: 900px; }
+  .page-head h1 { font-size: clamp(40px, 6vw, 72px); margin-bottom: 20px; }
+  .body :global(h2:first-child) { margin-top: 0; }
+</style>

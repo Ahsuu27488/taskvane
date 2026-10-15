@@ -1,0 +1,22 @@
+---
+// A real app screenshot (1600x936 window capture) as responsive WebP.
+interface Props { name: string; alt: string; eager?: boolean; crop?: boolean; class?: string }
+const { name, alt, eager = false, crop = false, class: cls = '' } = Astro.props;
+// full window 1600x936, or the content area without the app sidebar (1326x898)
+const [big, small, w, h] = crop ? [`${name}-crop-1300`, `${name}-crop-700`, 1300, 880] : [`${name}-1600`, `${name}-800`, 1600, 936];
+---
+<img
+  class={`shot ${cls}`}
+  src={`/img/${big}.webp`}
+  srcset={`/img/${small}.webp ${crop ? 700 : 800}w, /img/${big}.webp ${w}w`}
+  sizes="(max-width: 900px) 100vw, 760px"
+  width={w} height={h}
+  alt={alt}
+  loading={eager ? 'eager' : 'lazy'}
+  fetchpriority={eager ? 'high' : 'auto'}
+  decoding="async"
+/>
+
+<style>
+  .shot { border-radius: 12px; box-shadow: 0 1px 0 #ffffff inset, 0 24px 60px -24px rgba(21, 34, 50, .45), 0 0 0 1px rgba(21, 34, 50, .12); background: #111214; }
+</style>
