@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Taskvane</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav>
+  <div class="brand">
+    <svg viewBox="0 0 24 24"><rect x="1" y="1" width="22" height="22" rx="6" fill="#3987e5"/><path d="M5 13h3l2-5 3 9 2-6 1.5 2H19" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Taskvane
+  </div>
+  <a data-page="overview" class="active"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>Overview</a>
+  <a data-page="performance"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>Performance</a>
+  <a data-page="processes"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Processes</a>
+  <a data-page="sensors"><svg viewBox="0 0 24 24"><path d="M14 14.8V4a2 2 0 1 0-4 0v10.8a4 4 0 1 0 4 0z"/></svg>Sensors</a>
+  <a data-page="power"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>Power</a>
+  <a data-page="startup"><svg viewBox="0 0 24 24"><path d="M12 3v9M6.3 6.3a8 8 0 1 0 11.4 0"/></svg>Startup apps</a>
+  <a data-page="settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Settings</a>
+  <div class="spacer"></div>
+  <div class="nav-foot">
+    <button class="btn" id="miniBtn"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><rect x="12" y="12" width="7" height="6" rx="1"/></svg>Mini widget</button>
+    <div class="admin-badge" id="adminBadge"></div>
+  </div>
+</nav>
+
+<main>
+  <!-- ================= OVERVIEW ================= -->
+  <section class="page active" id="p-overview">
+    <div class="page-h"><h1>Overview</h1><span class="sub" id="ovSub"></span><span class="grow"></span><span class="sub num" id="ovUptime"></span></div>
+    <div class="banner" id="adminBanner" hidden></div>
+    <div class="grid g4">
+      <div class="card tile" data-goto="cpu">
+        <div class="label"><span class="sw" style="background:var(--c-cpu)"></span>CPU<span class="right" id="tCpuR"></span></div>
+        <div class="value" id="tCpu">–</div><div class="detail" id="tCpuD">&nbsp;</div><canvas id="sCpu"></canvas>
+      </div>
+      <div class="card tile" data-goto="mem">
+        <div class="label"><span class="sw" style="background:var(--c-mem)"></span>Memory<span class="right" id="tMemR"></span></div>
+        <div class="value" id="tMem">–</div><div class="detail" id="tMemD">&nbsp;</div><canvas id="sMem"></canvas>
+      </div>
+      <div class="card tile" data-goto="gpu0">
+        <div class="label"><span class="sw" style="background:var(--c-gpu)"></span>GPU<span class="right" id="tGpuR"></span></div>
+        <div class="value" id="tGpu">–</div><div class="detail" id="tGpuD">&nbsp;</div><canvas id="sGpu"></canvas>
+      </div>
+      <div class="card tile" data-goto="power">
+        <div class="label"><span class="sw" style="background:var(--c-pwr)"></span>Power draw<span class="right" id="tPwrR"></span></div>
+        <div class="value" id="tPwr">–</div><div class="detail" id="tPwrD">&nbsp;</div><canvas id="sPwr"></canvas>
+      </div>
+    </div>
+    <div class="insights" id="insights"></div>
+    <div class="card">
+      <div class="card-h"><h2>Activity</h2>
+        <div class="legend"><span><i style="background:var(--c-cpu)"></i>CPU</span><span><i style="background:var(--c-mem)"></i>Memory</span><span><i style="background:var(--c-gpu)"></i>GPU</span></div>
+        <div class="seg" data-range="ov"><button data-s="60">1m</button><button data-s="300" class="on">5m</button><button data-s="900">15m</button><button data-s="3600">1h</button></div>
+      </div>
+      <div class="chart" id="ovChart" style="height:220px"></div>
+    </div>
+    <div class="grid g3">
+      <div class="card"><div class="card-h"><h2>Temperatures</h2><span class="meta" id="tempMeta"></span></div><div class="rows" id="ovTemps"></div></div>
+      <div class="card"><div class="card-h"><h2>Top apps</h2><div class="seg" id="topBy"><button data-k="cpu" class="on">CPU</button><button data-k="mem">Memory</button><button data-k="io_rate">Disk</button></div></div><div class="toplist" id="ovTop"></div></div>
+      <div class="card"><div class="card-h"><h2>Power</h2><span class="meta" id="ovPwrMeta"></span></div>
+        <div class="rows" id="ovPower"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PERFORMANCE ================= -->
+  <section class="page" id="p-performance">
+    <div class="page-h"><h1>Performance</h1><span class="grow"></span>
+      <div class="seg" data-range="perf"><button data-s="60" class="on">1m</button><button data-s="300">5m</button><button data-s="900">15m</button><button data-s="3600">1h</button></div>
+    </div>
+    <div class="perf">
+      <div class="devices" id="devices"></div>
+      <div class="grid" style="gap:16px">
+        <div class="card">
+          <div class="card-h"><div><h2 id="pfTitle" style="font-size:18px"></h2><div class="meta" id="pfSub"></div></div><div class="legend" id="pfLegend"></div></div>
+          <div class="chart bigchart" id="pfChart"></div>
+        </div>
+        <div class="card"><div class="stats" id="pfStats"></div></div>
+        <div class="card" id="pfExtraCard"><div class="card-h"><h2 id="pfExtraTitle"></h2></div><div id="pfExtra"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PROCESSES ================= -->
+  <section class="page" id="p-processes">
+    <div class="page-h"><h1>Processes</h1><span class="sub" id="prCount"></span><span class="grow"></span>
+      <input type="search" id="prQ" placeholder="Search name, PID, user or path">
+      <div class="seg" id="prView"><button data-v="apps" class="on">Grouped</button><button data-v="all">All processes</button></div>
+      <button class="btn danger" id="prEnd" disabled>End task</button>
+    </div>
+    <div class="tablewrap" id="prWrap"><table>
+      <thead><tr>
+        <th class="l" data-k="name">Name</th><th class="l" data-k="user">User</th><th data-k="pid">PID</th>
+        <th data-k="cpu"><small id="hCpu">–</small>CPU</th><th data-k="mem"><small id="hMem">–</small>Memory</th>
+        <th data-k="io_rate"><small id="hDisk">–</small>Disk</th><th data-k="threads">Threads</th>
+      </tr></thead>
+      <tbody id="prBody"></tbody>
+    </table></div>
+  </section>
+
+  <!-- ================= SENSORS ================= -->
+  <section class="page" id="p-sensors">
+    <div class="page-h"><h1>Sensors</h1><span class="sub" id="snCount"></span><span class="grow"></span>
+      <input type="search" id="snQ" placeholder="Filter sensors">
+      <button class="btn" data-act="resetMinMax">Reset min / max</button>
+    </div>
+    <div class="banner" id="snBanner" hidden></div>
+    <div class="grid g2" id="snGroups"></div>
+  </section>
+
+  <!-- ================= POWER ================= -->
+  <section class="page" id="p-power">
+    <div class="page-h"><h1>Power</h1><span class="grow"></span></div>
+    <div class="grid g4" id="pwTiles"></div>
+    <div class="card">
+      <div class="card-h"><h2>Power draw</h2><span class="meta" id="pwSrc"></span>
+        <div class="seg" data-range="pw"><button data-s="60">1m</button><button data-s="300" class="on">5m</button><button data-s="900">15m</button><button data-s="3600">1h</button></div>
+      </div>
+      <div class="chart" id="pwChart" style="height:240px"></div>
+    </div>
+    <div class="card"><div class="card-h"><h2>Battery</h2><span class="meta" id="batName"></span></div><div class="rows" id="pwBattery"></div></div>
+  </section>
+
+  <!-- ================= STARTUP ================= -->
+  <section class="page" id="p-startup">
+    <div class="page-h"><h1>Startup apps</h1><span class="sub" id="suCount"></span><span class="grow"></span><button class="btn" data-act="refreshStartup">Refresh</button></div>
+    <div class="card"><div class="list" id="suList"></div></div>
+    <p class="hint">Turning an app off works the same way as Task Manager: the entry stays in place and Windows skips it at sign-in. Machine-wide entries need administrator rights.</p>
+  </section>
+
+  <!-- ================= SETTINGS ================= -->
+  <section class="page" id="p-settings">
+    <div class="page-h"><h1>Settings</h1></div>
+    <div class="card"><div class="card-h"><h2>General</h2></div><div class="list">
+      <div class="li"><div><div class="t">Launch when Windows starts</div><div class="s">Starts minimized to the notification area</div></div><span></span><label class="switch"><input type="checkbox" data-set="autostart"><span></span></label></div>
+      <div class="li"><div><div class="t">Always start as administrator</div><div class="s" id="adminAutoDesc">Keeps CPU temperature and power on, with no UAC prompt each time (uses an elevated scheduled task)</div></div><span></span><label class="switch"><input type="checkbox" data-set="admin_auto"><span></span></label></div>
+      <div class="li"><div><div class="t">Closing the window keeps Taskvane running</div><div class="s">It stays in the notification area so alerts keep working</div></div><span></span><label class="switch"><input type="checkbox" data-set="close_to_tray"><span></span></label></div>
+      <div class="li"><div><div class="t">Temperature unit</div></div><span></span><div class="seg" id="unitSeg"><button data-u="C">°C</button><button data-u="F">°F</button></div></div>
+      <div class="li"><div><div class="t">Notification-area icon shows</div></div><span></span><select data-set="tray_metric"><option value="cpu">CPU usage</option><option value="cpu_temp">CPU temperature</option><option value="gpu_temp">GPU temperature</option><option value="power">Power draw</option><option value="mem">Memory usage</option></select></div>
+    </div></div>
+    <div class="card"><div class="card-h"><h2>Alerts</h2><label class="switch"><input type="checkbox" data-set="alerts.enabled"><span></span></label></div><div class="list">
+      <div class="li"><div><div class="t">CPU temperature above</div><div class="s">Needs administrator mode</div></div><span></span><span><input type="number" data-set="alerts.cpu_temp" min="40" max="110"> °C</span></div>
+      <div class="li"><div><div class="t">GPU temperature above</div></div><span></span><span><input type="number" data-set="alerts.gpu_temp" min="40" max="110"> °C</span></div>
+      <div class="li"><div><div class="t">Memory usage above</div></div><span></span><span><input type="number" data-set="alerts.mem" min="50" max="99"> %</span></div>
+      <div class="li"><div><div class="t">Battery below (on battery)</div></div><span></span><span><input type="number" data-set="alerts.battery_low" min="5" max="50"> %</span></div>
+      <div class="li"><div><div class="t">Sustained CPU usage above</div><div class="s">Averaged over 1 minute</div></div><span></span><span><input type="number" data-set="alerts.cpu_load" min="50" max="100"> %</span></div>
+    </div></div>
+    <div class="card"><div class="card-h"><h2>Data &amp; access</h2></div><div class="list">
+      <div class="li"><div><div class="t">Export the last hour of history</div><div class="s">CSV with CPU, memory, GPU, temperatures, power, disk and network</div></div><span></span><button class="btn" data-act="export">Export CSV…</button></div>
+      <div class="li"><div><div class="t">Administrator mode</div><div class="s" id="adminDesc"></div></div><span></span><button class="btn" data-act="admin" id="adminBtn">Restart as administrator</button></div>
+      <div class="li"><div><div class="t">CPU sensor driver (PawnIO)</div><div class="s" id="pawnioDesc"></div></div><span></span><button class="btn" data-act="cpuSensors" id="pawnioBtn" hidden>Install</button></div>
+      <div class="li"><div><div class="t">Sensor engine</div><div class="s" id="engineDesc"></div></div><span></span><button class="btn" data-act="openLog">Open log</button></div>
+    </div></div>
+    <div class="card"><div class="card-h"><h2>About</h2><span class="meta" id="aboutVersion"></span></div><div class="list">
+      <div class="li"><div><div class="t">Taskvane</div><div class="s">A better Task Manager for Windows 11: usage, temperatures and power draw in one place.</div></div><span></span><button class="btn" data-url="https://taskvane.ahsandev.site">Website</button></div>
+      <div class="li"><div><div class="t">Made by Muhammad Ahsan</div><div class="s">Open source under the GPL-3.0 license. Bug reports, ideas and pull requests are welcome.</div></div><span></span><span style="display:flex;gap:8px"><button class="btn" data-url="https://github.com/Ahsuu27488/taskvane">GitHub</button><button class="btn" data-url="https://github.com/Ahsuu27488/taskvane/issues/new/choose">Report a problem</button></span></div>
+    </div></div>
+  </section>
+</main>
+
+<!-- process details drawer -->
+<aside class="drawer" id="drawer"></aside>
+<!-- context menu -->
+<div class="ctx" id="ctx"></div>
+<div id="toast"></div>
+
+<script src="chart.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

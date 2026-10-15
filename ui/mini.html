@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Taskvane Mini</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  body { display: block; background: var(--surface); border: 1px solid var(--border); overflow: hidden; }
+  .w { padding: 10px 12px 8px; display: grid; gap: 7px; }
+  .top { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-3); }
+  .top .grow { flex: 1; }
+  .top button { border: 0; background: none; color: var(--text-3); width: 20px; height: 20px; border-radius: 4px; cursor: default; line-height: 1; }
+  .top button:hover { background: var(--surface-3); color: var(--text); }
+  .m { display: grid; grid-template-columns: 40px 1fr 62px; gap: 8px; align-items: center; font-size: 12px; }
+  .m .k { color: var(--text-2); font-weight: 600; }
+  .m .v { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+  .m .meter { margin: 0; }
+  .pywebview-drag-region { cursor: move; }
+</style>
+</head>
+<body>
+<div class="w">
+  <div class="top pywebview-drag-region"><span>Taskvane</span><span class="grow"></span>
+    <button id="open" title="Open Taskvane">⤢</button><button id="close" title="Close widget">✕</button></div>
+  <div id="rows"></div>
+</div>
+<script>
+const $ = id => document.getElementById(id);
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+let unit = 'C';
+const fmtT = c => c == null ? '' : Math.round(unit === 'F' ? c * 9 / 5 + 32 : c) + '°';
+const line = (k, p, v, color) => `<div class="m"><span class="k">${k}</span><div class="meter"><i style="width:${Math.max(0, Math.min(100, p || 0))}%;background:${color}"></i></div><span class="v">${v}</span></div>`;
+async function tick() {
+  const s = await window.pywebview.api.get_stats(), sys = s.system, hw = s.hw;
+  if (!sys || sys.cpu == null) return;
+  const g = (hw.gpus || []).find(x => x.discrete) || (hw.gpus || [])[0];
+  const b = hw.battery;
+  let html = line('CPU', sys.cpu, `${Math.round(sys.cpu)}% ${fmtT(hw.cpu_temp)}`, css('--c-cpu'));
+  html += line('RAM', sys.mem.percent, Math.round(sys.mem.percent) + '%', css('--c-mem'));
+  if (g) html += line('GPU', g.load, `${Math.round(g.load ?? 0)}% ${fmtT(g.temp)}`, css('--c-gpu'));
+  if (hw.power_w != null) html += line('PWR', hw.power_w / 60 * 100, hw.power_w.toFixed(1) + ' W', css('--c-pwr'));
+  if (b?.percent != null) html += line('BAT', b.percent, Math.round(b.percent) + '%' + (b.plugged ? ' ⚡' : ''), b.percent < 20 ? css('--critical') : css('--good'));
+  $('rows').innerHTML = html;
+  // grow/shrink the window to fit the rows (5 on battery, 4 when plugged in, etc.)
+  const h = Math.ceil(document.querySelector('.w').getBoundingClientRect().height) + 2;
+  if (h !== lastH) { lastH = h; window.pywebview.api.resize_mini(h); }
+}
+let lastH = 0;
+window.addEventListener('pywebviewready', async () => {
+  unit = (await window.pywebview.api.get_settings()).unit || 'C';
+  tick(); setInterval(tick, 1000);
+  $('close').onclick = () => window.pywebview.api.toggle_mini();
+  $('open').onclick = () => window.pywebview.api.show_main();
+});
+</script>
+</body>
+</html>

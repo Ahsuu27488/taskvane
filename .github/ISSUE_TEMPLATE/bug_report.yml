@@ -1,0 +1,45 @@
+name: Bug report
+description: Something isn't working right
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you expect, and what happened instead? Screenshots help.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: "1. Open Taskvane\n2. Go to …\n3. …"
+  - type: input
+    id: version
+    attributes:
+      label: Taskvane version
+      description: Settings → About
+      placeholder: "1.2.0"
+    validations:
+      required: true
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version
+      placeholder: "Windows 11 24H2"
+  - type: input
+    id: hardware
+    attributes:
+      label: CPU / GPU / laptop model
+      placeholder: "i7-9850H, GeForce MX150, Dell Precision 5540"
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Running as administrator?
+      options: ["Yes", "No", "Not sure"]
+  - type: textarea
+    id: log
+    attributes:
+      label: Log
+      description: Paste the end of %APPDATA%\Taskvane\taskvane.log (Settings → Sensor engine → Open log)
+      render: text
