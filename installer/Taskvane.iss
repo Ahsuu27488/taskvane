@@ -117,7 +117,9 @@ end;
 // Offer to remove settings and logs on uninstall.
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 begin
-  if (CurUninstallStep = usPostUninstall) and DirExists(ExpandConstant('{userappdata}\Taskvane')) then
+  // Never in silent mode: /SUPPRESSMSGBOXES would answer Yes, and scripted/winget
+  // uninstalls must not delete user data.
+  if (CurUninstallStep = usPostUninstall) and not UninstallSilent() and DirExists(ExpandConstant('{userappdata}\Taskvane')) then
     if MsgBox('Also delete your Taskvane settings and logs?', mbConfirmation, MB_YESNO or MB_DEFBUTTON2) = IDYES then
       DelTree(ExpandConstant('{userappdata}\Taskvane'), True, True, True);
 end;
