@@ -32,7 +32,7 @@ _Last updated: 2026-10-16 (website mobile pass, packaging drafts)_
 2. **winget**: PR opened 2026-10-16, https://github.com/microsoft/winget-pkgs/pull/453922. Owner must accept the Microsoft CLA when the bot comments; then wait for validation/moderation. Once merged, add `winget install Ahsuu27488.Taskvane` to the download page and README.
    **Scoop**: live in https://github.com/Ahsuu27488/scoop-bucket (`scoop bucket add ahsuu27488 …; scoop install ahsuu27488/taskvane`). Test a real install before advertising it on the site. Each release: update `bucket/taskvane.json` there (or rely on `autoupdate` via Scoop's Excavator if it moves to Extras).
    **AlternativeTo** listing text in `docs/launch.md` (owner submits).
-3. Launch posts: drafts for Show HN, r/Windows11, r/pcmasterrace, Product Hunt and awesome lists are in `docs/launch.md`; the owner posts them.
+3. Launch posts: drafts for Show HN, r/Windows11, r/pcmasterrace, Product Hunt and awesome lists are in `docs/launch.md` (local only, gitignored, on the owner's PC); the owner posts them.
 4. **Code signing**: apply to SignPath Foundation (free for OSS) to remove the SmartScreen warning.
 5. **PawnIO redistribution**: get written OK from namazso (admin@namazso.eu) before wider distribution.
 6. GitHub profile README (repo `Ahsuu27488/Ahsuu27488`) and the site's About page now lead with AI work: Chronos (OpenAI Agents SDK multi-agent, 7 self-written MCP tools, Whisper voice, Qdrant semantic search, SSE/push/email notifications, K8s/Dapr/Kafka) and the Physical AI textbook (RAG over Qdrant, LLM Urdu translation). Claims checked against those repos' code; chronos.ahsandev.site is down, so links use the Vercel URL.
@@ -41,7 +41,8 @@ _Last updated: 2026-10-16 (website mobile pass, packaging drafts)_
 ## Repo hygiene (2026-10-16)
 
 - `.github/` (CI workflows, issue/PR templates) and `.claude/` (settings.json + two doc hooks) are meant to be public; neither holds anything private. `.claude/launch.json` and other local files stay ignored by `/.claude/*` in `.gitignore`.
-- CLAUDE.md used to list the owner's private repo names; removed. They remain in older commits' history unless the history is rewritten (owner's call: needs a force-push to `main`).
+- Personal working notes moved from CLAUDE.md to `CLAUDE.local.md`, and launch drafts to a local-only `docs/launch.md` (both gitignored).
+- History rewritten with git-filter-repo (owner approved) to remove the private repo names, the personal notes and `docs/launch.md` from old commits; `main` force-pushed. `v1.2.0` and earlier commits were untouched. A backup bundle of the old history is in `%USERPROFILE%	askvane-pre-rewrite.bundle`.
 
 ## Known limitations
 
