@@ -68,4 +68,4 @@ Release: bump `VERSION` in `app.py` → add a `## x.y.z` section to `CHANGELOG.m
 
 ## Keeping these docs current
 
-A Stop hook blocks finishing when code changed but `docs/STATUS.md` / `CHANGELOG.md` didn't. When you finish work: update **docs/STATUS.md** (what changed, what's next), add user-visible changes to **CHANGELOG.md** (under an `## Unreleased` heading if no version bump), and add any new trap or design choice to this file or **docs/DECISIONS.md**.
+A Stop hook (local `.claude/`, not in git) blocks finishing when code changed but `docs/STATUS.md` / `CHANGELOG.md` didn't. When you finish work: update **docs/STATUS.md** (what changed, what's next), add user-visible changes to **CHANGELOG.md** (under an `## Unreleased` heading if no version bump), and add any new trap or design choice to this file or **docs/DECISIONS.md**.

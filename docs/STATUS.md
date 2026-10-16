@@ -40,7 +40,7 @@ _Last updated: 2026-10-16 (website mobile pass, packaging drafts)_
 
 ## Repo hygiene (2026-10-16)
 
-- `.github/` (CI workflows, issue/PR templates) and `.claude/` (settings.json + two doc hooks) are meant to be public; neither holds anything private. `.claude/launch.json` and other local files stay ignored by `/.claude/*` in `.gitignore`.
+- `.github/` (CI workflows, issue/PR templates) stays public. `.claude/` (settings.json + the two doc hooks) is local only now: untracked and ignored by `/.claude/` (owner's call, 2026-10-16). The files still live on the owner's PC, so the hooks keep working there.
 - Personal working notes moved from CLAUDE.md to `CLAUDE.local.md`, and launch drafts to a local-only `docs/launch.md` (both gitignored).
 - History rewritten with git-filter-repo (owner approved) to remove the private repo names, the personal notes and `docs/launch.md` from old commits; `main` force-pushed. `v1.2.0` and earlier commits were untouched. A backup bundle of the old history is in `%USERPROFILE%	askvane-pre-rewrite.bundle`.
 

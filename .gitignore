@@ -25,6 +25,5 @@ CLAUDE.local.md
 .idea/
 Thumbs.db
 desktop.ini
-/.claude/*
-!/.claude/settings.json
-!/.claude/hooks/
+# Claude Code project settings and hooks are local only
+/.claude/
