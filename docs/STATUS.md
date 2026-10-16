@@ -28,7 +28,7 @@ _Last updated: 2026-10-16 (website mobile pass, packaging drafts)_
 
 ## Next steps
 
-1. Register the site in **Google Search Console** and **Bing Webmaster Tools** (owner must sign in; verify via DNS TXT in Cloudflare or an HTML file in `website/public/`), then submit `https://taskvane.ahsandev.site/sitemap-index.xml`.
+1. **Google Search Console**: verification file `website/public/google07f290b9883c4ddb.html` published 2026-10-16 (URL-prefix property, owner's Google account); keep that file forever or verification is lost. Then submit the sitemap and import into Bing. Original step: register the site in **Google Search Console** and **Bing Webmaster Tools** (owner must sign in; verify via DNS TXT in Cloudflare or an HTML file in `website/public/`), then submit `https://taskvane.ahsandev.site/sitemap-index.xml`.
 2. **winget**: PR opened 2026-10-16, https://github.com/microsoft/winget-pkgs/pull/453922. Owner must accept the Microsoft CLA when the bot comments; then wait for validation/moderation. Once merged, add `winget install Ahsuu27488.Taskvane` to the download page and README.
    **Scoop**: live in https://github.com/Ahsuu27488/scoop-bucket (`scoop bucket add ahsuu27488 …; scoop install ahsuu27488/taskvane`). Test a real install before advertising it on the site. Each release: update `bucket/taskvane.json` there (or rely on `autoupdate` via Scoop's Excavator if it moves to Extras).
    **AlternativeTo** listing text in `docs/launch.md` (owner submits).
