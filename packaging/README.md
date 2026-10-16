@@ -28,7 +28,13 @@ Notes:
 Uses the portable zip; settings persist across updates in Scoop's `persist\taskvane\data`.
 `checkver` + `autoupdate` read new GitHub releases and their `SHA256SUMS.txt`.
 
-Main/extras buckets require a notable project (stars, age). Until then, either:
-- PR it to the `ScoopInstaller/Extras` bucket once the repo has some traction, or
-- host it in a bucket repo of our own (`Ahsuu27488/scoop-bucket`):
-  `scoop bucket add taskvane https://github.com/Ahsuu27488/scoop-bucket && scoop install taskvane`.
+Published in our own bucket, https://github.com/Ahsuu27488/scoop-bucket (copy the manifest to
+`bucket/taskvane.json` there on each release):
+
+```powershell
+scoop bucket add ahsuu27488 https://github.com/Ahsuu27488/scoop-bucket
+scoop install ahsuu27488/taskvane
+```
+
+Later, once the repo has some traction, PR it to `ScoopInstaller/Extras`. Not yet tested with a real
+`scoop install` (schema-validated; hash and zip layout checked against the release).

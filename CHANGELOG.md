@@ -4,7 +4,8 @@
 
 - Website works properly on phones: new menu button, temperature scale labels no longer overlap, comparison tables show both columns, readable screenshots
 - Website: "Also in Taskvane" section and a "Send link to my PC" button for phone visitors
-- winget and Scoop manifests in `packaging/`
+- winget and Scoop manifests in `packaging/`; Scoop bucket at github.com/Ahsuu27488/scoop-bucket
+- Website About page: AI agent, MCP and RAG work highlighted
 
 ## 1.2.0 (first public release)
 

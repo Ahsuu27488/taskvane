@@ -29,11 +29,14 @@ _Last updated: 2026-10-16 (website mobile pass, packaging drafts)_
 ## Next steps
 
 1. Register the site in **Google Search Console** and **Bing Webmaster Tools** (owner must sign in; verify via DNS TXT in Cloudflare or an HTML file in `website/public/`), then submit `https://taskvane.ahsandev.site/sitemap-index.xml`.
-2. Submit to **winget**: manifests are ready and validated in `packaging/winget/1.2.0/` (steps in `packaging/README.md`); needs the owner's OK to open the PR on microsoft/winget-pkgs. **Scoop** manifest in `packaging/scoop/taskvane.json` (own bucket or Extras later). **AlternativeTo** listing text in `docs/launch.md`.
+2. **winget**: PR opened 2026-10-16, https://github.com/microsoft/winget-pkgs/pull/453922. Owner must accept the Microsoft CLA when the bot comments; then wait for validation/moderation. Once merged, add `winget install Ahsuu27488.Taskvane` to the download page and README.
+   **Scoop**: live in https://github.com/Ahsuu27488/scoop-bucket (`scoop bucket add ahsuu27488 …; scoop install ahsuu27488/taskvane`). Test a real install before advertising it on the site. Each release: update `bucket/taskvane.json` there (or rely on `autoupdate` via Scoop's Excavator if it moves to Extras).
+   **AlternativeTo** listing text in `docs/launch.md` (owner submits).
 3. Launch posts: drafts for Show HN, r/Windows11, r/pcmasterrace, Product Hunt and awesome lists are in `docs/launch.md`; the owner posts them.
 4. **Code signing**: apply to SignPath Foundation (free for OSS) to remove the SmartScreen warning.
 5. **PawnIO redistribution**: get written OK from namazso (admin@namazso.eu) before wider distribution.
-6. Owner to-dos: set GitHub bio (`gh auth refresh -h github.com -s user`, or paste in Settings), pin repos on profile, review About page wording (`website/src/pages/about.astro`).
+6. GitHub profile README (repo `Ahsuu27488/Ahsuu27488`) and the site's About page now lead with AI work: Chronos (OpenAI Agents SDK multi-agent, 7 self-written MCP tools, Whisper voice, Qdrant semantic search, SSE/push/email notifications, K8s/Dapr/Kafka) and the Physical AI textbook (RAG over Qdrant, LLM Urdu translation). Claims checked against those repos' code; chronos.ahsandev.site is down, so links use the Vercel URL.
+7. Owner to-dos: set GitHub bio (`gh auth refresh -h github.com -s user`, or paste in Settings), pin repos on profile, review About page wording (`website/src/pages/about.astro`).
 
 ## Known limitations
 

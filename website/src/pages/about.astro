@@ -2,20 +2,31 @@
 import Page from '../layouts/Page.astro';
 import { SITE } from '../lib/site';
 
-const projects = [
+const projects: { name: string; what: string; points?: string[]; stack: string; live?: string; code: string }[] = [
   {
-    name: 'Physical AI & Humanoid Robotics textbook',
-    what: 'An AI-native textbook with a RAG-powered chatbot that answers questions from the book, content personalization and Urdu translation.',
-    stack: 'Docusaurus, FastAPI, RAG',
-    live: 'https://ahsuu27488.github.io/physical-ai-textbook/',
-    code: 'https://github.com/Ahsuu27488/physical-ai-textbook',
-  },
-  {
-    name: 'Chronos: Evolution of Todo',
-    what: 'A full-stack task app built in five phases, from a console script to a real-time web app with recurring tasks and authentication.',
-    stack: 'Next.js 15, FastAPI, Neon PostgreSQL',
+    name: 'Chronos: an AI assistant for your to-do list',
+    what: 'A task manager built in five phases, from a Python console app to a multi-agent AI system deployed on Kubernetes.',
+    points: [
+      'Manage tasks by chatting or by voice: a main agent hands off to planning and search specialists, built on the OpenAI Agents SDK',
+      'Seven MCP tools I wrote (add, update, complete, delete, list, get and semantic search), each scoped to the signed-in user',
+      'Whisper voice commands in English, Urdu and Roman Urdu, with semantic search over tasks in Qdrant',
+      'Due-date reminders and completion alerts in real time (SSE), as browser push and by email, plus daily and weekly digests',
+    ],
+    stack: 'OpenAI Agents SDK, MCP, Whisper, Qdrant, Next.js 15, FastAPI, Neon PostgreSQL, Kubernetes, Dapr, Kafka',
     live: 'https://evolution-of-todo-tau.vercel.app',
     code: 'https://github.com/Ahsuu27488/evolution-of-todo',
+  },
+  {
+    name: 'Physical AI & Humanoid Robotics textbook',
+    what: 'An AI-native textbook on ROS 2, simulation and vision-language-action models, with AI built into every page.',
+    points: [
+      'RAG chatbot: lessons are chunked, embedded into Qdrant and used to answer questions from the book itself',
+      'Lessons personalized to your software and hardware background',
+      'One-click Urdu translation by an LLM, cached per page',
+    ],
+    stack: 'RAG, Qdrant, OpenAI, Docusaurus, FastAPI',
+    live: 'https://ahsuu27488.github.io/physical-ai-textbook/',
+    code: 'https://github.com/Ahsuu27488/physical-ai-textbook',
   },
   {
     name: 'Edit Recreator',
@@ -60,16 +71,16 @@ const personDetail = {
   '@type': 'Person',
   '@id': `${SITE.url}/about/#person`,
   name: SITE.author.name,
-  jobTitle: 'Software developer',
-  knowsAbout: ['Python', 'TypeScript', 'Next.js', 'FastAPI', 'Windows development', 'AI applications', 'RAG chatbots'],
+  jobTitle: 'Software developer, AI agents and full-stack apps',
+  knowsAbout: ['AI agents', 'OpenAI Agents SDK', 'Model Context Protocol', 'Retrieval-augmented generation', 'Qdrant', 'Whisper speech recognition', 'Claude Code', 'Python', 'TypeScript', 'Next.js', 'FastAPI', 'Kubernetes', 'Windows development'],
   memberOf: { '@type': 'Organization', name: 'Panaverse', url: 'https://github.com/panaverse' },
 };
 ---
 <Page
   title="About Muhammad Ahsan, the developer of Taskvane"
   h1="Made by Muhammad Ahsan"
-  lede="I'm a software developer from Nawabshah, Pakistan, building web apps, AI tools and Windows utilities. Taskvane is my latest project."
-  description="Muhammad Ahsan is a software developer from Nawabshah, Pakistan, and the creator of Taskvane. Projects include a RAG-powered AI textbook, full-stack web apps and Windows utilities."
+  lede="I'm a software developer from Nawabshah, Pakistan. I build AI agents, RAG chatbots and full-stack apps, and Windows tools like Taskvane."
+  description="Muhammad Ahsan is a software developer from Nawabshah, Pakistan, and the creator of Taskvane. He builds AI agents with the OpenAI Agents SDK and MCP, RAG chatbots, full-stack web apps and Windows utilities."
   crumbs={[{ name: 'About', path: '/about/' }]}
   schema={[person, personDetail]}
   wide
@@ -80,6 +91,17 @@ const personDetail = {
     <p>Taskvane is open source because a tool that asks for administrator rights and installs a driver should be one you can inspect. The code, issues and releases are all on <a href={SITE.repo}>GitHub</a>.</p>
   </div>
 
+  <section class="ai prose">
+    <h2>What I do with AI</h2>
+    <ul>
+      <li><strong>AI agents</strong> on the OpenAI Agents SDK, with handoffs between specialist agents and streaming replies.</li>
+      <li><strong>MCP servers and tools</strong> I write myself, so agents can safely create, change and search real data.</li>
+      <li><strong>RAG systems:</strong> ingestion pipelines, embeddings in Qdrant, and answers grounded in the source.</li>
+      <li><strong>Voice input</strong> with Whisper, in English, Urdu and Roman Urdu.</li>
+      <li><strong>Agentic development</strong> with Claude Code: spec-driven development, custom subagents, skills and plugins.</li>
+    </ul>
+  </section>
+
   <section class="work">
     <h2>Other things I've built</h2>
     <ul class="projects">
@@ -87,6 +109,7 @@ const personDetail = {
         <li>
           <h3>{p.name}</h3>
           <p>{p.what}</p>
+          {p.points && <ul class="points">{p.points.map((x) => <li>{x}</li>)}</ul>}
           <p class="stack">{p.stack}</p>
           <p class="links">
             {p.live && <a href={p.live}>Live site</a>}
@@ -104,13 +127,16 @@ const personDetail = {
 </Page>
 
 <style>
-  .intro, .contact { margin-bottom: 72px; }
+  .intro, .contact, .ai { margin-bottom: 72px; }
+  .ai h2 { margin-top: 0; }
   .work { margin-bottom: 72px; }
   .work > h2 { margin-bottom: 28px; }
   .projects { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 48px; border-top: 1px solid var(--rule); }
   .projects li { padding: 24px 0 20px; border-bottom: 1px solid var(--rule); }
   .projects h3 { margin-bottom: 8px; }
   .projects p { color: var(--slate); margin: 0 0 8px; max-width: 34em; }
+  .points { margin: 4px 0 12px; padding-left: 1.1em; color: var(--slate); font-size: 16px; }
+  .points li { padding: 0; border: 0; margin: 4px 0; }
   .projects .stack { font-size: 15px; color: var(--ink); }
   .projects .links { display: flex; gap: 18px; font-size: 15px; font-weight: 600; margin: 0; }
   @media (max-width: 760px) { .projects { grid-template-columns: 1fr; } }
