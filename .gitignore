@@ -23,4 +23,6 @@ venv/
 .idea/
 Thumbs.db
 desktop.ini
-.claude/
+/.claude/*
+!/.claude/settings.json
+!/.claude/hooks/
