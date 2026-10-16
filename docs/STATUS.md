@@ -38,6 +38,11 @@ _Last updated: 2026-10-16 (website mobile pass, packaging drafts)_
 6. GitHub profile README (repo `Ahsuu27488/Ahsuu27488`) and the site's About page now lead with AI work: Chronos (OpenAI Agents SDK multi-agent, 7 self-written MCP tools, Whisper voice, Qdrant semantic search, SSE/push/email notifications, K8s/Dapr/Kafka) and the Physical AI textbook (RAG over Qdrant, LLM Urdu translation). Claims checked against those repos' code; chronos.ahsandev.site is down, so links use the Vercel URL.
 7. Owner to-dos: set GitHub bio (`gh auth refresh -h github.com -s user`, or paste in Settings), pin repos on profile, review About page wording (`website/src/pages/about.astro`).
 
+## Repo hygiene (2026-10-16)
+
+- `.github/` (CI workflows, issue/PR templates) and `.claude/` (settings.json + two doc hooks) are meant to be public; neither holds anything private. `.claude/launch.json` and other local files stay ignored by `/.claude/*` in `.gitignore`.
+- CLAUDE.md used to list the owner's private repo names; removed. They remain in older commits' history unless the history is rewritten (owner's call: needs a force-push to `main`).
+
 ## Known limitations
 
 - Whole-system power is only available on battery (Windows limitation); on AC only CPU/GPU package power.
