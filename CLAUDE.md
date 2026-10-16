@@ -26,6 +26,7 @@ Taskvane is a free, open-source (GPL-3.0) **Task Manager alternative for Windows
 | `ui/` | Plain HTML/CSS/JS UI (no build step). `app.js` talks to Python via `window.pywebview.api` |
 | `installer/Taskvane.iss` | Inno Setup installer |
 | `tools/` | `fetch_deps.ps1` (pinned + SHA-256-verified LHM & PawnIO into `lib/`), `make_icon.py`, `make_version_info.py`, `snap.py` / `clickseq.py` (window capture + scripted clicks for testing) |
+| `packaging/` | winget + Scoop manifests (update per release) |
 | `website/` | Astro static site → GitHub Pages at https://taskvane.ahsandev.site |
 | `.github/workflows/` | `build.yml` (exe/installer/portable + smoke test; publishes a release on `v*` tags), `website.yml` (deploys the site) |
 
@@ -53,6 +54,7 @@ Release: bump `VERSION` in `app.py` → add a `## x.y.z` section to `CHANGELOG.m
 - **Inno Setup `/SUPPRESSMSGBOXES` answers Yes** to MsgBox; guard user-data deletion with `not UninstallSilent()`.
 - **Windows PowerShell 5.1** (used by helper, CI, installer tests): `Expand-Archive` needs a `.zip` extension; `"$( ... 'text (with paren' ... )"` mis-parses; `Start-Process -Wait` waits for the whole child-process tree.
 - **This machine:** `python.exe` is a launcher shim (the PID you start exits; find the real process by command line). Chrome headless can't render narrower than ~500 px (use the browser pane's mobile preset for phone checks). The Bash/PowerShell tool's safety parser rejects some command lines containing `Remove-Item` plus `/x`-style args: split such commands.
+- **Phone-width captures:** the browser pane's screenshots often time out; Playwright (installed, `channel="chrome"`, `is_mobile=True`, 375 px, scroll first so lazy images load) gives reliable full-page shots. Run it from PowerShell: Git Bash rewrites `/features/`-style args into Windows paths.
 - `.gitignore` root patterns are anchored (`/lib/`, `/build/` …) so `website/src/lib` isn't ignored.
 
 ## Testing (do this, don't skip it)

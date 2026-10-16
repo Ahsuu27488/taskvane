@@ -15,14 +15,14 @@ const rel = await getRelease();
     <section class="choice main">
       <h2>Installer</h2>
       <p>Recommended. Adds Taskvane to the Start menu, can set up CPU sensors for you, and can be removed from Settings &gt; Apps.</p>
-      <a class="btn btn-primary" href={rel.setup.url}>Download {rel.setup.name}</a>
-      <p class="size num">{mb(rel.setup.size)}</p>
+      <a class="btn btn-primary" href={rel.setup.url}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Download installer</a>
+      <p class="size num"><span class="file">{rel.setup.name}</span>{rel.setup.size ? `, ${mb(rel.setup.size)}` : ''}</p>
     </section>
     <section class="choice">
       <h2>Portable</h2>
       <p>Nothing to install. Unzip anywhere, run <code>Taskvane.exe</code>, and delete the folder when you're done. Settings stay in the folder.</p>
-      <a class="btn btn-quiet" href={rel.portable.url}>Download {rel.portable.name}</a>
-      <p class="size num">{mb(rel.portable.size)}</p>
+      <a class="btn btn-quiet" href={rel.portable.url}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Download portable zip</a>
+      <p class="size num"><span class="file">{rel.portable.name}</span>{rel.portable.size ? `, ${mb(rel.portable.size)}` : ''}</p>
     </section>
   </div>
 
@@ -49,7 +49,8 @@ const rel = await getRelease();
   .choice.main { border-color: var(--blue); box-shadow: 0 0 0 1px var(--blue); }
   .choice h2 { font-size: 34px; margin-bottom: 12px; }
   .choice p { color: var(--slate); max-width: 30em; }
-  .choice .btn { margin-top: 8px; word-break: break-all; }
+  .choice .btn { margin-top: 8px; }
+  .file { overflow-wrap: anywhere; }
   .size { font-size: 15px; margin: 12px 0 0; }
   .notes h2:first-child { margin-top: 0; }
   @media (max-width: 760px) { .choices { grid-template-columns: 1fr; } .choice { padding: 24px; } }

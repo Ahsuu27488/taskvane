@@ -83,6 +83,14 @@ const app = {
     'One-hour history graphs and CSV export',
   ],
 };
+const extras = [
+  { icon: 'M12 3a6 6 0 0 0-6 6v4l-2 3h16l-2-3V9a6 6 0 0 0-6-6zM10 19a2 2 0 0 0 4 0', title: 'Alerts before trouble', body: 'Get a Windows notification when the CPU or GPU runs hot, memory fills up, the battery gets low or the CPU stays busy.' },
+  { icon: 'M4 5h16v14H4zM12 12h6v5h-6z', title: 'Always-on-top mini widget', body: 'A small floating panel with CPU and GPU load, temperatures and watts that stays on top of your other windows.' },
+  { icon: 'M12 3v9M6.3 6.3a8 8 0 1 0 11.4 0', title: 'Startup apps', body: 'See what launches when Windows starts and switch items on or off, the same way Task Manager does.' },
+  { icon: 'M4 19h16M7 15l3-4 3 2 4-6M14 7h3v3', title: 'One hour of history', body: 'Scroll back through the last hour of every graph and export it as a CSV file.' },
+  { icon: 'M4 7l8-4 8 4v10l-8 4-8-4zM4 7l8 4 8-4M12 11v10', title: 'Installer or portable', body: 'Install it normally, or unzip the portable version and run it from any folder or USB stick.' },
+  { icon: 'M12 3l7 3v5c0 5-3 8.5-7 10-4-1.5-7-5-7-10V6zM9 12l2 2 4-4', title: 'Private by design', body: 'No account, no ads, no telemetry. Taskvane makes no network connections at all.' },
+];
 ---
 <Base
   title="Taskvane: a better Task Manager for Windows 11, with temperatures and power draw"
@@ -102,6 +110,13 @@ const app = {
           <a class="btn btn-quiet" href={SITE.repo}>View source on GitHub</a>
         </div>
         <p class="meta">Version {rel.version}{rel.setup.size ? `, ${mb(rel.setup.size)}` : ''}. For Windows 10 and 11, 64-bit. <a href="/download/">Portable version and checksums</a></p>
+        <div class="on-phone" hidden>
+          <p><strong>On your phone?</strong> Taskvane runs on Windows PCs. Send this page to your computer and download it there.</p>
+          <button class="btn btn-quiet share" type="button" data-url={`${SITE.url}/download/`}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4M7 9l5-5 5 5M5 14v5h14v-5"/></svg>
+            <span>Send link to my PC</span>
+          </button>
+        </div>
       </div>
       <div class="visual">
         <Shot name="overview" alt="Taskvane overview showing CPU at 78 °C, memory, GPU and 26 W power draw with an activity chart" eager />
@@ -126,6 +141,21 @@ const app = {
     </div>
   </section>
 
+  <section class="extras" aria-labelledby="extras-h">
+    <div class="wrap">
+      <h2 id="extras-h">Also in Taskvane</h2>
+      <ul class="extras-grid">
+        {extras.map((x) => (
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={x.icon} /></svg>
+            <h3>{x.title}</h3>
+            <p>{x.body}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
   <section class="light">
     <div class="wrap light-grid">
       <h2>Built to stay out of the way</h2>
@@ -141,18 +171,18 @@ const app = {
       <h2>Taskvane next to Task Manager</h2>
       <p class="sub">Task Manager is still great for services and per-app network use. Taskvane covers the hardware side it skips.</p>
       <div class="table-scroll">
-        <table>
+        <table class="stack">
           <thead><tr><th scope="col">What you can see</th><th scope="col" class="c">Task Manager</th><th scope="col" class="c">Taskvane</th></tr></thead>
           <tbody>
-            <tr><td>CPU, memory, disk, network and GPU usage</td><td class="c yes">Yes</td><td class="c yes">Yes</td></tr>
-            <tr><td>CPU core and package temperature</td><td class="c no">No</td><td class="c yes">Yes</td></tr>
-            <tr><td>GPU temperature</td><td class="c part">Dedicated GPUs only</td><td class="c yes">Yes, plus hot spot</td></tr>
-            <tr><td>Power draw in watts</td><td class="c no">No</td><td class="c yes">Yes</td></tr>
-            <tr><td>Battery health and time left at the current draw</td><td class="c no">No</td><td class="c yes">Yes</td></tr>
-            <tr><td>Alerts for heat, memory and low battery</td><td class="c no">No</td><td class="c yes">Yes</td></tr>
-            <tr><td>History graphs</td><td class="c part">Last 60 seconds</td><td class="c yes">Up to 1 hour, with CSV export</td></tr>
-            <tr><td>Always-on-top mini widget</td><td class="c no">No</td><td class="c yes">Yes</td></tr>
-            <tr><td>Services, users and per-app network use</td><td class="c yes">Yes</td><td class="c no">No</td></tr>
+            <tr><th scope="row">CPU, memory, disk, network and GPU usage</th><td data-label="Task Manager" class="c yes">Yes</td><td data-label="Taskvane" class="c yes">Yes</td></tr>
+            <tr><th scope="row">CPU core and package temperature</th><td data-label="Task Manager" class="c no">No</td><td data-label="Taskvane" class="c yes">Yes</td></tr>
+            <tr><th scope="row">GPU temperature</th><td data-label="Task Manager" class="c part">Dedicated GPUs only</td><td data-label="Taskvane" class="c yes">Yes, plus hot spot</td></tr>
+            <tr><th scope="row">Power draw in watts</th><td data-label="Task Manager" class="c no">No</td><td data-label="Taskvane" class="c yes">Yes</td></tr>
+            <tr><th scope="row">Battery health and time left at the current draw</th><td data-label="Task Manager" class="c no">No</td><td data-label="Taskvane" class="c yes">Yes</td></tr>
+            <tr><th scope="row">Alerts for heat, memory and low battery</th><td data-label="Task Manager" class="c no">No</td><td data-label="Taskvane" class="c yes">Yes</td></tr>
+            <tr><th scope="row">History graphs</th><td data-label="Task Manager" class="c part">Last 60 seconds</td><td data-label="Taskvane" class="c yes">Up to 1 hour, with CSV export</td></tr>
+            <tr><th scope="row">Always-on-top mini widget</th><td data-label="Task Manager" class="c no">No</td><td data-label="Taskvane" class="c yes">Yes</td></tr>
+            <tr><th scope="row">Services, users and per-app network use</th><td data-label="Task Manager" class="c yes">Yes</td><td data-label="Taskvane" class="c no">No</td></tr>
           </tbody>
         </table>
       </div>
@@ -174,6 +204,23 @@ const app = {
   </section>
 </Base>
 
+<script>
+  // Phones can't run a Windows app: offer to send the download page to a PC instead.
+  const note = document.querySelector('.on-phone') as HTMLElement | null;
+  if (note && matchMedia('(pointer: coarse) and (max-width: 900px)').matches) {
+    note.hidden = false;
+    const btn = note.querySelector('.share') as HTMLButtonElement;
+    const label = btn.querySelector('span')!;
+    btn.addEventListener('click', async () => {
+      const url = btn.dataset.url!;
+      try {
+        if (navigator.share) await navigator.share({ title: 'Taskvane for Windows', text: 'Download Taskvane on my PC', url });
+        else { await navigator.clipboard.writeText(url); label.textContent = 'Link copied'; }
+      } catch { /* share sheet dismissed */ }
+    });
+  }
+</script>
+
 <style>
   .hero { padding: 64px 0 88px; overflow: hidden; }
   .grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 56px; align-items: center; }
@@ -191,11 +238,26 @@ const app = {
   .f-copy p { color: var(--slate); max-width: 30em; }
   .f-copy a { font-weight: 600; }
 
+  .on-phone { margin-top: 24px; padding: 18px 20px; border-radius: var(--radius-lg); background: var(--paper); border: 1px solid var(--rule); }
+  .on-phone p { margin: 0 0 14px; font-size: 16px; color: var(--slate); }
+  .on-phone strong { color: var(--ink); }
+  .on-phone .btn { padding: 11px 18px; font-size: 16px; cursor: pointer; }
+
+  .extras { padding: 24px 0 104px; }
+  .extras h2 { margin-bottom: 40px; }
+  .extras-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border-top: 1px solid var(--rule); }
+  .extras-grid li { padding: 28px 28px 28px 0; border-bottom: 1px solid var(--rule); }
+  .extras-grid li:not(:nth-child(3n + 1)) { padding-left: 28px; border-left: 1px solid var(--rule); }
+  .extras-grid svg { width: 28px; height: 28px; color: var(--blue); margin-bottom: 14px; }
+  .extras-grid h3 { margin-bottom: 8px; }
+  .extras-grid p { margin: 0; color: var(--slate); font-size: 16px; }
+
   .light { padding: 72px 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
   .light-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 56px; }
   .light strong { font-size: 1.15em; }
 
   .compare { padding: 96px 0 24px; }
+  .compare th[scope='row'] { font-weight: 400; }
   .compare .sub { color: var(--slate); margin: 16px 0 0; max-width: 36em; }
 
   .get { padding: 72px 0 0; }
@@ -217,5 +279,20 @@ const app = {
     .get-grid { padding: 32px 24px; }
     .get-actions { justify-content: flex-start; }
     .hero { padding-top: 40px; }
+    .extras-grid { grid-template-columns: 1fr 1fr; }
+    .extras-grid li, .extras-grid li:not(:nth-child(3n + 1)) { padding: 24px 20px 24px 0; border-left: 0; }
+    .extras-grid li:nth-child(even) { padding-left: 20px; padding-right: 0; border-left: 1px solid var(--rule); }
+  }
+  @media (max-width: 560px) {
+    .features { padding-top: 72px; }
+    .extras { padding-bottom: 72px; }
+    .extras-grid { grid-template-columns: 1fr; }
+    .compare th[scope='row'] { font-weight: 650; }
+    /* app screenshots run off the right edge at a size you can actually read */
+    .hero, .features { overflow: hidden; }
+    .visual, .f-shot { margin-right: calc(-1 * var(--gutter)); }
+    .visual :global(img), .f-shot :global(img) { width: 175%; max-width: none; border-radius: 10px 0 0 10px; }
+    .extras-grid li, .extras-grid li:nth-child(even) { display: grid; grid-template-columns: 40px 1fr; padding: 20px 0; border-left: 0; }
+    .extras-grid svg { grid-row: span 2; margin: 2px 0 0; }
   }
 </style>

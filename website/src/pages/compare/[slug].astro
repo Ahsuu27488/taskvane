@@ -18,13 +18,13 @@ const cell = (v: string) =>
   wide
 >
   <div class="table-scroll">
-    <table>
+    <table class="stack">
       <caption class="sr-only">Feature comparison of {c.other} and Taskvane</caption>
       <thead><tr><th scope="col">Feature</th><th scope="col">{c.other}</th><th scope="col">Taskvane</th></tr></thead>
       <tbody>
         {c.rows.map(([what, o, t]) => {
           const a = cell(o), b = cell(t);
-          return <tr><th scope="row">{what}</th><td class={a.cls}>{a.text}</td><td class={b.cls}>{b.text}</td></tr>;
+          return <tr><th scope="row">{what}</th><td class={a.cls} data-label={c.other}>{a.text}</td><td class={b.cls} data-label="Taskvane">{b.text}</td></tr>;
         })}
       </tbody>
     </table>

@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Website works properly on phones: new menu button, temperature scale labels no longer overlap, comparison tables show both columns, readable screenshots
+- Website: "Also in Taskvane" section and a "Send link to my PC" button for phone visitors
+- winget and Scoop manifests in `packaging/`
+
 ## 1.2.0 (first public release)
 
 The first open-source release of Taskvane, a better Task Manager for Windows 11.

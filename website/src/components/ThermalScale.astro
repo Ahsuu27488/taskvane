@@ -58,7 +58,7 @@ const moments = [
   const out = { temp: root.querySelector('[data-temp]')!, state: root.querySelector('[data-state]')!, why: root.querySelector('[data-why]')! };
 
   const describe = (t: number) => {
-    if (t >= 95) return ['Critical', 'crit', 'At the limit. Most CPUs throttle around 100 °C to protect themselves, so performance drops. Taskvane alerts you well before this.'];
+    if (t >= 95) return ['Critical', 'crit', 'At the limit. Most CPUs throttle around 100 °C to protect themselves, so performance drops. Taskvane alerts you well before this.'];
     if (t >= 85) return ['Hot', 'hot', 'Sustained heavy load. Safe for short bursts, but check your cooling if it stays here.'];
     if (t >= 70) return ['Warm', 'warm', "Typical while gaming or exporting video. Fans spin up, and that's expected."];
     if (t >= 50) return ['Normal', 'normal', 'Everyday work: browsing, documents, video calls.'];
@@ -105,7 +105,7 @@ const moments = [
   .instrument { --normal: var(--cool); --warm-c: var(--warm); --hot-c: var(--hot); --crit-c: var(--crit); }
   .readout { display: grid; grid-template-columns: auto auto 1fr; align-items: baseline; gap: 4px 20px; margin-bottom: 28px; min-height: 96px; }
   .temp { font-size: clamp(56px, 9vw, 104px); font-weight: 700; font-stretch: 75%; line-height: 0.9; letter-spacing: -0.03em; }
-  .state { font-weight: 650; font-size: 22px; padding: 6px 14px; border-radius: 999px; color: #fff; background: var(--cool); transition: background-color .2s; }
+  .state { justify-self: start; font-weight: 650; font-size: 22px; padding: 6px 14px; border-radius: 999px; color: #fff; background: var(--cool); transition: background-color .2s; }
   .why { color: var(--slate); margin: 0; max-width: 32em; align-self: center; }
   .thermal[data-state='warm'] .state { background: #c98500; }
   .thermal[data-state='hot'] .state { background: var(--hot); }
@@ -144,10 +144,24 @@ const moments = [
   .legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
 
   @media (max-width: 760px) {
-    .head { grid-template-columns: 1fr; }
-    .readout { grid-template-columns: auto 1fr; }
-    .why { grid-column: 1 / -1; }
-    .moments li { font-size: 12px; }
-    .moments li:nth-child(2) { display: none; }
+    .thermal { padding: 64px 0; }
+    .head { grid-template-columns: 1fr; margin-bottom: 28px; }
+    .readout { grid-template-columns: auto 1fr; min-height: 0; margin-bottom: 20px; }
+    .state { justify-self: start; font-size: 18px; }
+    .why { grid-column: 1 / -1; min-height: 3.2em; }
+    /* two staggered label rows so neighbouring moments can't collide on a phone */
+    .ruler { padding-top: 66px; }
+    .moments { height: 58px; }
+    .moments li { font-size: 12.5px; line-height: 1.3; padding-bottom: 0; }
+    .moments li:nth-child(even) { top: 24px; }
+    .moments li::after { top: calc(100% + 3px); bottom: auto; height: 40px; }
+    .moments li:nth-child(even)::after { height: 16px; }
+    .moments li:first-child { transform: translateX(-35%); }
+    .moments li:first-child::after { left: 35%; }
+    input[type='range'] { top: 56px; }
+    input[type='range']::-webkit-slider-thumb { width: 10px; border-radius: 5px; }
+    input[type='range']::-moz-range-thumb { width: 10px; border-radius: 5px; }
+    .legend { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; font-size: 14px; }
+    .legend div { flex-direction: column; gap: 0; }
   }
 </style>
