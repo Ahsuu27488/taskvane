@@ -28,7 +28,7 @@ _Last updated: 2026-10-16 (website mobile pass, packaging drafts)_
 
 ## Next steps
 
-1. **Google Search Console**: verified 2026-10-16 (URL-prefix property `https://taskvane.ahsandev.site/`, owner's Google account) via `website/public/google07f290b9883c4ddb.html` (keep that file forever). `sitemap-index.xml` submitted. Next: request indexing for the home page (URL inspection), then **Bing Webmaster Tools** → import from Google Search Console.
+1. **Google Search Console**: verified 2026-10-16 (URL-prefix property `https://taskvane.ahsandev.site/`, owner's Google account) via `website/public/google07f290b9883c4ddb.html` (keep that file forever). `sitemap-index.xml` submitted. Indexing requested for `/` and `/download/`. **Bing Webmaster Tools**: imported from GSC 2026-10-16, sitemap status Success. Check GSC → Pages in about a week. Possible later improvement: IndexNow ping from `website.yml` on each deploy.
 2. **winget**: PR opened 2026-10-16, https://github.com/microsoft/winget-pkgs/pull/453922. CLA accepted by the owner 2026-10-16; validation checks 01–07 passed; waiting for installation validation and a moderator. Once merged, add `winget install Ahsuu27488.Taskvane` to the download page and README.
    **Scoop**: live in https://github.com/Ahsuu27488/scoop-bucket (`scoop bucket add ahsuu27488 …; scoop install ahsuu27488/taskvane`). Test a real install before advertising it on the site. Each release: update `bucket/taskvane.json` there (or rely on `autoupdate` via Scoop's Excavator if it moves to Extras).
    **AlternativeTo** listing text in `docs/launch.md` (owner submits).
