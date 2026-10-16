@@ -5,7 +5,9 @@ Ready-to-submit manifests for the current release. Update the version, URLs and 
 
 ## winget (`winget/1.2.0/`)
 
-Validated with `winget validate --manifest packaging\winget\1.2.0`.
+Validated with `winget validate --manifest packaging\winget\1.2.0` (schema 1.12).
+Submitted 2026-10-16: https://github.com/microsoft/winget-pkgs/pull/453922 (the owner accepts the
+Microsoft CLA when the bot asks).
 
 To submit, fork `microsoft/winget-pkgs` and add the three files under
 `manifests/a/Ahsuu27488/Taskvane/1.2.0/`, then open a PR. Or let `wingetcreate` do it:
