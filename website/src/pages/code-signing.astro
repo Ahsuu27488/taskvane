@@ -1,0 +1,36 @@
+---
+import Page from '../layouts/Page.astro';
+import { SITE } from '../lib/site';
+---
+<Page
+  title="Taskvane code signing policy and privacy"
+  h1="Code signing policy"
+  lede="How Taskvane releases are built and signed, who can approve a release, and what the app does with your data."
+  description="Taskvane's code signing policy: builds come from the public source on GitHub Actions, team roles, and privacy (Taskvane sends nothing over the network)."
+  crumbs={[{ name: 'Code signing policy', path: '/code-signing/' }]}
+>
+  <h2>Signing</h2>
+  <p>Taskvane releases are not code-signed yet, which is why Windows SmartScreen warns about them on first run. We're applying for free code signing from <a href="https://signpath.io">SignPath.io</a>, with a certificate by <a href="https://signpath.org">SignPath Foundation</a>. Once that is approved, releases will carry this note:</p>
+  <p><strong>Free code signing provided by SignPath.io, certificate by SignPath Foundation.</strong></p>
+
+  <h2>What gets signed</h2>
+  <ul>
+    <li>Only files built from Taskvane's own <a href={SITE.repo}>source code</a>: <code>Taskvane.exe</code> and the installer.</li>
+    <li>Every release is built by <a href={`${SITE.repo}/actions/workflows/build.yml`}>GitHub Actions</a> from a tagged commit in the public repository. Nothing is built or signed on a personal PC.</li>
+    <li>Third-party components included in the download (LibreHardwareMonitorLib, the PawnIO driver installer) are not signed with Taskvane's certificate. PawnIO comes with its author's own signature.</li>
+    <li>Each release is approved by hand before it is signed.</li>
+  </ul>
+
+  <h2>Team roles</h2>
+  <ul>
+    <li><strong>Committers and reviewers:</strong> <a href="https://github.com/Ahsuu27488">{SITE.author.name}</a>. Pull requests from anyone else are reviewed before they are merged.</li>
+    <li><strong>Approvers:</strong> <a href="https://github.com/Ahsuu27488">{SITE.author.name}</a>.</li>
+  </ul>
+
+  <h2 id="privacy">Privacy policy</h2>
+  <p>This program will not transfer any information to other networked systems unless specifically requested by the user or the person installing or operating it.</p>
+  <p>Taskvane has no account, no ads and no telemetry. It only opens a web page when you click a link or choose "Search online" on a process. Its user interface runs in Microsoft Edge WebView2, a part of Windows covered by <a href="https://privacy.microsoft.com/privacystatement">Microsoft's privacy statement</a>.</p>
+
+  <h2>Changes to your system</h2>
+  <p>Taskvane only changes system settings you choose: installing the PawnIO driver for CPU sensors, starting at sign-in, or always starting as administrator (a scheduled task). Each one is off until you turn it on, and the uninstaller removes Taskvane's tasks and files. PawnIO stays installed because other apps may use it; you can remove it from Settings &gt; Apps.</p>
+</Page>

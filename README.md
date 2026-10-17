@@ -109,6 +109,17 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the project layout and how it works.
 
 Logs: `%APPDATA%\Taskvane\taskvane.log` (Settings → Sensor engine → Open log).
 
+## Code signing policy
+
+Releases are built by GitHub Actions from this repository's tagged source. Taskvane isn't signed yet; we're applying for free code signing provided by [SignPath.io](https://signpath.io), certificate by [SignPath Foundation](https://signpath.org). Only Taskvane's own binaries get signed; bundled third-party components (LibreHardwareMonitorLib, PawnIO) are not.
+
+- Committers and reviewers: [Muhammad Ahsan](https://github.com/Ahsuu27488)
+- Approvers: [Muhammad Ahsan](https://github.com/Ahsuu27488)
+
+**Privacy:** This program will not transfer any information to other networked systems unless specifically requested by the user or the person installing or operating it.
+
+Full policy: https://taskvane.ahsandev.site/code-signing/
+
 ## License
 
 Taskvane is free software under the [GNU General Public License v3.0](LICENSE). Bundled third-party components keep their own licenses; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

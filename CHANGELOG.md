@@ -6,6 +6,7 @@
 - Website: "Also in Taskvane" section and a "Send link to my PC" button for phone visitors
 - winget and Scoop manifests in `packaging/`; Scoop bucket at github.com/Ahsuu27488/scoop-bucket
 - Website About page: AI agent, MCP and RAG work highlighted
+- Code signing policy and privacy policy (website `/code-signing/`, README, download page), ahead of applying for free code signing from SignPath Foundation
 
 ## 1.2.0 (first public release)
 
