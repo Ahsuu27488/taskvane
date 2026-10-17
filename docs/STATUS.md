@@ -1,6 +1,6 @@
 # Status
 
-_Last updated: 2026-10-17 (code signing policy page, SignPath prep)_
+_Last updated: 2026-10-17 (demo reel in README + release)_
 
 ## Live
 
@@ -32,11 +32,12 @@ _Last updated: 2026-10-17 (code signing policy page, SignPath prep)_
 2. **winget**: PR opened 2026-10-16, https://github.com/microsoft/winget-pkgs/pull/453922. CLA accepted by the owner 2026-10-16; validation checks 01–07 passed; waiting for installation validation and a moderator. Once merged, add `winget install Ahsuu27488.Taskvane` to the download page and README.
    **Scoop**: live in https://github.com/Ahsuu27488/scoop-bucket (`scoop bucket add ahsuu27488 …; scoop install ahsuu27488/taskvane`). Test a real install before advertising it on the site. Each release: update `bucket/taskvane.json` there (or rely on `autoupdate` via Scoop's Excavator if it moves to Extras).
    **AlternativeTo** listing text in `docs/launch.md` (owner submits).
-3. Launch posts: drafts for Show HN, r/Windows11, r/pcmasterrace, Product Hunt and awesome lists are in `docs/launch.md` (local only, gitignored, on the owner's PC); the owner posts them.
-4. **Code signing (SignPath Foundation)**: requirements met on our side as of 2026-10-17: code signing policy + privacy at `/code-signing/`, linked from the footer (every page), download page and README. Form answers are in local `docs/launch.md`. The owner submits (it creates a SignPath account; CAPTCHA). Weak spot: their "Reputation" field (0 stars, a handful of downloads), so submitting after the launch posts / winget merge is wiser. Needs GitHub 2FA. After approval: change "We're applying" wording to the final credit line and add the SignPath step to `build.yml`.
-5. **PawnIO redistribution**: get written OK from namazso (admin@namazso.eu) before wider distribution. Email sent 2026-10-17 from the owner's Gmail; waiting for a reply.
-6. GitHub profile README (repo `Ahsuu27488/Ahsuu27488`) and the site's About page now lead with AI work: Chronos (OpenAI Agents SDK multi-agent, 7 self-written MCP tools, Whisper voice, Qdrant semantic search, SSE/push/email notifications, K8s/Dapr/Kafka) and the Physical AI textbook (RAG over Qdrant, LLM Urdu translation). Claims checked against those repos' code; chronos.ahsandev.site is down, so links use the Vercel URL.
-7. Owner to-dos: set GitHub bio (`gh auth refresh -h github.com -s user`, or paste in Settings), pin repos on profile, review About page wording (`website/src/pages/about.astro`).
+3. **Ad reel**: 9:16 Remotion reel in English (Liam voice, 46 s) and Hinglish (Bunty voice, 50 s), with an original ElevenLabs synthwave track. Source is a separate local project `C:\dev\taskvane-reel` (not in this repo; its README covers re-rendering). The MP4s are attached to the v1.2.0 release as `Taskvane-demo-reel-*.mp4` and linked from the README "Demo video" section (posters in `docs/screenshots/reel-*.jpg`). For a future release, re-upload them or update the README links. Posting on Instagram is in the owner's Reminders. The music take wasn't checked for vocals: ElevenLabs credits ran out.
+4. Launch posts: drafts for Show HN, r/Windows11, r/pcmasterrace, Product Hunt and awesome lists are in `docs/launch.md` (local only, gitignored, on the owner's PC); the owner posts them.
+5. **Code signing (SignPath Foundation)**: requirements met on our side as of 2026-10-17: code signing policy + privacy at `/code-signing/`, linked from the footer (every page), download page and README. Form answers are in local `docs/launch.md`. The owner submits (it creates a SignPath account; CAPTCHA). Weak spot: their "Reputation" field (0 stars, a handful of downloads), so submitting after the launch posts / winget merge is wiser. Needs GitHub 2FA. After approval: change "We're applying" wording to the final credit line and add the SignPath step to `build.yml`.
+6. **PawnIO redistribution**: get written OK from namazso (admin@namazso.eu) before wider distribution. Email sent 2026-10-17 from the owner's Gmail; waiting for a reply.
+7. GitHub profile README (repo `Ahsuu27488/Ahsuu27488`) and the site's About page now lead with AI work: Chronos (OpenAI Agents SDK multi-agent, 7 self-written MCP tools, Whisper voice, Qdrant semantic search, SSE/push/email notifications, K8s/Dapr/Kafka) and the Physical AI textbook (RAG over Qdrant, LLM Urdu translation). Claims checked against those repos' code; chronos.ahsandev.site is down, so links use the Vercel URL.
+8. Owner to-dos: set GitHub bio (`gh auth refresh -h github.com -s user`, or paste in Settings), pin repos on profile, review About page wording (`website/src/pages/about.astro`).
 
 ## Repo hygiene (2026-10-16)
 

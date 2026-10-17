@@ -36,6 +36,14 @@ Windows Task Manager shows usage, but not **how hot** your PC is or **how much p
 | **Sensors** | **Power** |
 | <img src="docs/screenshots/sensors.png" alt="Taskvane sensors: CPU core temperatures and package power"> | <img src="docs/screenshots/power.png" alt="Taskvane power draw chart and battery health"> |
 
+## Demo video
+
+A 45-second tour of Taskvane (vertical, made for phones). Click to watch:
+
+| English | Hinglish |
+|---|---|
+| <a href="https://github.com/Ahsuu27488/taskvane/releases/download/v1.2.0/Taskvane-demo-reel-en.mp4"><img src="docs/screenshots/reel-en.jpg" width="300" alt="Taskvane demo video in English: Task Manager is hiding your CPU temperature"></a> | <a href="https://github.com/Ahsuu27488/taskvane/releases/download/v1.2.0/Taskvane-demo-reel-hinglish.mp4"><img src="docs/screenshots/reel-hinglish.jpg" width="300" alt="Taskvane demo video in Hinglish"></a> |
+
 ## Taskvane vs Task Manager
 
 | | Task Manager | Taskvane |
