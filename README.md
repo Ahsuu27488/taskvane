@@ -38,11 +38,11 @@ Windows Task Manager shows usage, but not **how hot** your PC is or **how much p
 
 ## Demo video
 
-A 45-second tour of Taskvane (vertical, made for phones). Click to watch:
+A 45-second tour of Taskvane (vertical, made for phones). Click to watch in your browser (also on the [v1.2.0 release](https://github.com/Ahsuu27488/taskvane/releases/tag/v1.2.0) as downloads):
 
 | English | Hinglish |
 |---|---|
-| <a href="https://github.com/Ahsuu27488/taskvane/releases/download/v1.2.0/Taskvane-demo-reel-en.mp4"><img src="docs/screenshots/reel-en.jpg" width="300" alt="Taskvane demo video in English: Task Manager is hiding your CPU temperature"></a> | <a href="https://github.com/Ahsuu27488/taskvane/releases/download/v1.2.0/Taskvane-demo-reel-hinglish.mp4"><img src="docs/screenshots/reel-hinglish.jpg" width="300" alt="Taskvane demo video in Hinglish"></a> |
+| <a href="https://taskvane.ahsandev.site/video/taskvane-demo-en.mp4"><img src="docs/screenshots/reel-en.jpg" width="300" alt="Taskvane demo video in English: Task Manager is hiding your CPU temperature"></a> | <a href="https://taskvane.ahsandev.site/video/taskvane-demo-hinglish.mp4"><img src="docs/screenshots/reel-hinglish.jpg" width="300" alt="Taskvane demo video in Hinglish"></a> |
 
 ## Taskvane vs Task Manager
 
