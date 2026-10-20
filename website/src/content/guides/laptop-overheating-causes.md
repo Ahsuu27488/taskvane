@@ -59,11 +59,11 @@ The temperature tells you whether the laptop is just warm under load or near its
 | **Hot** | 85 to 94 °C | Heavy load. Underside feels hot. Safe for short bursts, but cooling is near capacity. |
 | **Critical** | 95 °C and up | At the thermal limit. Modern laptop CPUs will throttle clock speeds to protect hardware. |
 
-To see how your temperatures evolve over time, open the **Performance** page in Taskvane. Taskvane graphs go back up to 1 hour with hover readouts, and the last hour can be exported as CSV.
+To see what happened over time, open the **Performance** page. Its graphs go back up to 1 hour with hover readouts: CPU load, and GPU temperature. CPU temperature isn't graphed there, but Taskvane records it, and the **CSV export** of the last hour includes a CPU temperature column you can open in Excel or any spreadsheet.
 
 <img class="shot" src="/img/performance-1600.webp" srcset="/img/performance-800.webp 800w, /img/performance-1600.webp 1600w" sizes="(max-width: 900px) 100vw, 760px" width="1600" height="936" alt="Taskvane Performance page showing hardware usage graphs and 1-hour history" loading="lazy" decoding="async" />
 
-This 1-hour history shows whether your laptop suffered a brief spike when launching a program or has been sitting in the Hot band for forty minutes.
+Together they show whether you had a brief spike when a program started or the CPU has been busy and hot for the last forty minutes.
 
 Without administrator mode, Taskvane displays usage numbers, the process list, GPU temperatures, battery power draw, and battery health. CPU temperature, CPU power, and drive temperatures require administrator mode and the free PawnIO driver from `https://pawnio.eu/`. On first launch, click **Enable CPU sensors** on the Overview page, install PawnIO, and click **Restart as administrator**. For sensor setup details, follow [how to check CPU temperature on Windows 11](/guides/check-cpu-temperature-windows-11/). For typical operating ranges, read [what is a normal CPU temperature](/guides/normal-cpu-temperature/).
 
