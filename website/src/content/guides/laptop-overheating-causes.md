@@ -3,8 +3,8 @@ title: Why is my laptop so hot? Find the app that's causing it
 seoTitle: Why is my laptop so hot? Find the app that's causing it
 description: Is your laptop hot and loud? Learn how to find runaway apps using high CPU, check temperature history, fix airflow issues, and stop overheating on Windows.
 targetQuery: why is my laptop overheating
-published: 2026-10-22
-updated: 2026-10-22
+published: 2026-10-27
+updated: 2026-10-27
 promise: Track down runaway processes, check temperature history, and fix laptop heat and fan noise.
 related:
   - normal-cpu-temperature

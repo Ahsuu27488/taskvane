@@ -34,6 +34,14 @@ _Last updated: 2026-10-20 (update notifications on main; PawnIO unbundled in 1.2
 - **Owner decision:** default ON vs OFF. Note the SignPath privacy template sentence ("will not transfer any information … unless specifically requested by the user"): an on-by-default check may need to become an opt-in prompt (ask once on first run) before applying. Flipping the default is one line (`DEFAULTS["check_updates"]` in `app.py`).
 - **Follow-up (after code signing):** optional download-and-install of the update. Not built on purpose (see DECISIONS.md).
 
+## Website guides (2026-10-20, scheduled)
+
+- `/guides/` section: Astro content collection `website/src/content/guides/*.md` (schema in `content.config.ts`), template `pages/guides/[slug].astro` (Article + FAQPage + BreadcrumbList JSON-LD, FAQ, download box, related guides, compare link), index page, `llms.txt` section, `/sitemap.xml` → sitemap index.
+- **Scheduled publishing:** a guide is built only once its `published` date has come (`src/lib/guides.ts`); links to not-yet-live guides are unwrapped to plain text after the build (`astro.config.mjs`); the Guides menu link and `llms.txt` section appear once at least one guide is live. `website.yml` rebuilds daily at 05:00 UTC (10:00 PKT) and pings IndexNow (Bing/Yandex) with pages that are new compared with the live sitemap. Test any day with `GUIDES_NOW=2026-10-24 npx astro build` (`C:\dev\taskvane-guides\test_dates.py` checks 4 dates for dead links).
+- Schedule: 21 Oct CPU temperature + normal CPU temperature; 24 Oct GPU temperature + battery health; 27 Oct laptop power draw + overheating.
+- Written by Gemini 3.8 Flash (High) workers via Foreman from fact sheets taken from the app's code; every claim reviewed and fixed by Claude (each draft had ~1 invented detail). Briefs + scripts: `C:\dev\taskvane-guides` (local).
+- Next: guides 7–10 from the owner's SEO brief (alternatives roundup, startup apps, CPU temp while gaming, logging over time); request indexing in Search Console after each batch goes live (optional, Google also reads the sitemap).
+
 ## Next steps
 
 1. **Google Search Console**: verified 2026-10-16 (URL-prefix property `https://taskvane.ahsandev.site/`, owner's Google account) via `website/public/google07f290b9883c4ddb.html` (keep that file forever). `sitemap-index.xml` submitted. Indexing requested for `/` and `/download/`. **Bing Webmaster Tools**: imported from GSC 2026-10-16, sitemap status Success. Check GSC → Pages in about a week. Possible later improvement: IndexNow ping from `website.yml` on each deploy. **Check 2026-10-20:** Google read the sitemap (12 pages discovered) but has indexed only `/` (5 impressions, 0 clicks; Page indexing report still processing). Bing read the sitemap; 0 pages indexed, 0 impressions. Re-check ~2026-10-27.

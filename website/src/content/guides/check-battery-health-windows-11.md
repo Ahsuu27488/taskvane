@@ -3,8 +3,8 @@ title: How to check battery health on Windows 11
 seoTitle: How to check battery health on Windows 11 (and read wear)
 description: Windows 11 does not show battery health in Settings. Here is how to generate a battery report, check wear in Taskvane, and preserve your laptop battery.
 targetQuery: how to check battery health Windows 11
-published: 2026-10-22
-updated: 2026-10-22
+published: 2026-10-24
+updated: 2026-10-24
 promise: The two numbers that matter, the exact powercfg steps, and what wear percentages mean.
 related:
   - check-laptop-power-draw-watts

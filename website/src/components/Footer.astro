@@ -1,5 +1,7 @@
 ---
 import { SITE, APP_VERSION } from '../lib/site';
+import { liveGuides } from '../lib/guides';
+const hasGuides = (await liveGuides()).length > 0;
 const year = new Date().getFullYear();
 ---
 <footer class="site-footer">
@@ -14,7 +16,7 @@ const year = new Date().getFullYear();
         <li><a href="/features/">Features</a></li>
         <li><a href="/changelog/">Changelog</a></li>
         <li><a href="/docs/">Docs</a></li>
-        <li><a href="/guides/">Guides</a></li>
+        {hasGuides && <li><a href="/guides/">Guides</a></li>}
       </ul>
       <ul>
         <li><a href="/compare/task-manager/">vs Task Manager</a></li>

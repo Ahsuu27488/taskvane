@@ -3,8 +3,8 @@ title: How to check how many watts your laptop is using
 seoTitle: How to check how many watts your laptop is using
 description: Windows does not show laptop power draw in watts. Learn how to check live power consumption on battery or AC, and what typical wattages look like.
 targetQuery: how to check laptop power consumption
-published: 2026-10-22
-updated: 2026-10-22
+published: 2026-10-27
+updated: 2026-10-27
 promise: Task Manager won't show watts. How to see whole-laptop draw, and what normal numbers look like.
 related:
   - check-battery-health-windows-11

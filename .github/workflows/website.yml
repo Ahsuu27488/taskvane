@@ -6,6 +6,8 @@ on:
     paths: ["website/**", "CHANGELOG.md", "app.py", ".github/workflows/website.yml"]
   release:
     types: [published]   # refresh download links and version
+  schedule:
+    - cron: "0 5 * * *"  # 10:00 Pakistan time: publishes guides whose `published` date has come
   workflow_dispatch:
 
 permissions:
@@ -17,9 +19,15 @@ concurrency:
   group: pages
   cancel-in-progress: true
 
+env:
+  SITE: https://taskvane.ahsandev.site
+  INDEXNOW_KEY: 7a2776560680333d2572299268b77eea   # public by design: website/public/<key>.txt
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      new_urls: ${{ steps.new.outputs.urls }}
     defaults:
       run:
         working-directory: website
@@ -31,9 +39,22 @@ jobs:
           cache: npm
           cache-dependency-path: website/package-lock.json
       - run: npm ci
+      - name: Remember which pages are live now
+        run: curl -fsS "$SITE/sitemap-0.xml" -o "$RUNNER_TEMP/live.xml" || echo "" > "$RUNNER_TEMP/live.xml"
       - run: npm run build
         env:
           GITHUB_TOKEN: ${{ github.token }}   # release info via the GitHub API without rate limits
+      - name: Pages that are new in this build
+        id: new
+        run: |
+          python3 - <<'EOF' >> "$GITHUB_OUTPUT"
+          import json, os, re
+          locs = lambda s: set(re.findall(r"<loc>(.*?)</loc>", s))
+          live = locs(open(os.environ["RUNNER_TEMP"] + "/live.xml").read())
+          new = sorted(locs(open("dist/sitemap-0.xml").read()) - live)
+          print("urls=" + json.dumps(new))
+          EOF
+          cat "$GITHUB_OUTPUT"
       - uses: actions/upload-pages-artifact@v3
         with:
           path: website/dist
@@ -47,3 +68,14 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+      # Tell Bing (and other IndexNow engines) about new pages. Google doesn't use IndexNow;
+      # it finds them through the sitemap. A failed ping never fails the deploy.
+      - name: IndexNow ping for new pages
+        if: needs.build.outputs.new_urls != '[]' && needs.build.outputs.new_urls != ''
+        env:
+          URLS: ${{ needs.build.outputs.new_urls }}
+        run: |
+          sleep 30   # let Pages finish serving the new files
+          body=$(python3 -c "import json,os; print(json.dumps({'host': 'taskvane.ahsandev.site', 'key': os.environ['INDEXNOW_KEY'], 'keyLocation': os.environ['SITE'] + '/' + os.environ['INDEXNOW_KEY'] + '.txt', 'urlList': json.loads(os.environ['URLS'])}))")
+          echo "$body"
+          curl -sS -X POST https://api.indexnow.org/indexnow -H "Content-Type: application/json; charset=utf-8" -d "$body" -w "\nHTTP %{http_code}\n" || true

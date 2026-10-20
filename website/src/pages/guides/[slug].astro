@@ -1,11 +1,12 @@
 ---
 import Page from '../../layouts/Page.astro';
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
+import { liveGuides } from '../../lib/guides';
 import { SITE, APP_VERSION } from '../../lib/site';
 import { COMPARISONS } from '../../lib/compare';
 
 export async function getStaticPaths() {
-  const guides = await getCollection('guides');
+  const guides = await liveGuides();
   return guides.map((guide) => ({
     params: { slug: guide.id },
     props: { guide },
@@ -15,7 +16,7 @@ export async function getStaticPaths() {
 const { guide } = Astro.props;
 const { Content } = await render(guide);
 
-const allGuides = await getCollection('guides');
+const allGuides = await liveGuides();
 const relatedGuides = (guide.data.related ?? [])
   .map((slug) => allGuides.find((g) => g.id === slug))
   .filter((g): g is NonNullable<typeof g> => Boolean(g));

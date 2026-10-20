@@ -3,8 +3,8 @@ title: How to check GPU temperature on Windows 11
 seoTitle: How to check GPU temperature on Windows 11 (and hot spot)
 description: Windows 11 can show GPU temperature in Task Manager for dedicated graphics cards. Here is how to find it, why it goes missing, and how to check your hot spot.
 targetQuery: how to check GPU temperature Windows 11
-published: 2026-10-22
-updated: 2026-10-22
+published: 2026-10-24
+updated: 2026-10-24
 promise: How to find it in Task Manager, why it might be missing, and what core and hot spot readings mean.
 related:
   - check-cpu-temperature-windows-11

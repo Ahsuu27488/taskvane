@@ -1,11 +1,13 @@
 ---
 import Logo from './Logo.astro';
 import { SITE } from '../lib/site';
+import { liveGuides } from '../lib/guides';
 const path = Astro.url.pathname;
+const hasGuides = (await liveGuides()).length > 0;
 const nav = [
   { href: '/features/', label: 'Features' },
   { href: '/compare/', label: 'Compare' },
-  { href: '/guides/', label: 'Guides' },
+  ...(hasGuides ? [{ href: '/guides/', label: 'Guides' }] : []),
   { href: '/docs/', label: 'Docs' },
   { href: '/faq/', label: 'FAQ' },
   { href: '/about/', label: 'About' },

@@ -1,4 +1,6 @@
 ---
+import { isLive } from '../lib/guides';
+const normalGuide = await isLive('normal-cpu-temperature');
 // Interactive CPU temperature ruler. Bands match the app's own thresholds
 // (tempStatus in ui/app.js with hot = 85): <70 Normal, 70–84 Warm, 85–94 Hot, ≥95 Critical.
 const MIN = 30, MAX = 105;
@@ -15,7 +17,7 @@ const moments = [
   <div class="wrap">
     <div class="head">
       <h2 id="thermal-h">How hot is too hot?</h2>
-      <p>Task Manager can't tell you. Drag the marker to see what your CPU temperature means and how Taskvane would show it. <a href="/guides/normal-cpu-temperature/">Read the guide on normal temperatures</a>.</p>
+      <p>Task Manager can't tell you. Drag the marker to see what your CPU temperature means and how Taskvane would show it.{normalGuide && <> <a href="/guides/normal-cpu-temperature/">Read the guide on normal temperatures</a>.</>}</p>
     </div>
 
     <div class="instrument">

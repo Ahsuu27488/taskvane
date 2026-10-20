@@ -1,11 +1,9 @@
 ---
 import Page from '../../layouts/Page.astro';
-import { getCollection } from 'astro:content';
+import { liveGuides } from '../../lib/guides';
 import { SITE } from '../../lib/site';
 
-const guides = (await getCollection('guides')).sort(
-  (a, b) => b.data.published.getTime() - a.data.published.getTime()
-);
+const guides = await liveGuides();
 
 const formatDate = (d: Date) =>
   d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
@@ -28,6 +26,7 @@ const itemListSchema = {
   crumbs={[{ name: 'Guides', path: '/guides/' }]}
   schema={[itemListSchema]}
 >
+  {guides.length === 0 && <p>The first guides are on their way. Meanwhile, the <a href="/docs/">docs</a> and <a href="/faq/">FAQ</a> answer the common questions.</p>}
   <div class="guides-list">
     {guides.map((g) => (
       <article class="guide-card">
