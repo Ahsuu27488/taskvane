@@ -36,7 +36,7 @@ const rel = await getRelease();
     <p>Windows only shows CPU sensors to apps running as administrator, through a signed driver called PawnIO. Taskvane doesn't bundle PawnIO; install it from its author's site, <a href="https://pawnio.eu/">pawnio.eu</a> (<strong>Enable CPU sensors</strong> in the app opens it), then restart Taskvane as administrator. <a href="/docs/#cpu-sensors">More about how this works</a>.</p>
 
     <h2>Code signing policy</h2>
-    <p>Releases are built by GitHub Actions from the public source. We're applying for free code signing provided by SignPath.io, certificate by SignPath Foundation. Taskvane sends nothing over the network. Read the <a href="/code-signing/">code signing policy and privacy policy</a>.</p>
+    <p>Releases are built by GitHub Actions from the public source. We're applying for free code signing provided by SignPath.io, certificate by SignPath Foundation. Taskvane has no telemetry; the only request it makes on its own is an optional daily update check. Read the <a href="/code-signing/">code signing policy and privacy policy</a>.</p>
 
     <h2>Build it yourself</h2>
     <p>Prefer not to run a downloaded exe? The full source is on <a href={SITE.repo}>GitHub</a>, with build instructions in the README.</p>

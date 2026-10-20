@@ -72,7 +72,7 @@ jobs:
           $log = Get-Content CHANGELOG.md -Raw
           $m = [regex]::Match($log, "(?ms)^## $([regex]::Escape($v)).*?\r?\n(.*?)(?=^## |\z)")
           $notes = $m.Groups[1].Value.Trim()
-          $notes += "`n`n**Download:** ``Taskvane-$v-Setup.exe`` (installer, recommended) or ``Taskvane-$v-Portable.zip`` (no install). Windows 10 1809+ / 11, 64-bit.`n`nIf SmartScreen warns, click **More info → Run anyway**. Verify downloads with ``SHA256SUMS.txt``."
+          $notes += "`n`n**Download:** ``Taskvane-$v-Setup.exe`` (installer, recommended) or ``Taskvane-$v-Portable.zip`` (no install). Windows 10 1809+ / 11, 64-bit.`n`nIf SmartScreen warns, click **More info → Run anyway**. Verify downloads with ``SHA256SUMS.txt``.`n`n[Code signing policy and privacy policy](https://taskvane.ahsandev.site/code-signing/)"
           Set-Content notes.md $notes
           gh release create "${{ github.ref_name }}" release/* --title "Taskvane $v" --notes-file notes.md
           # A release made with GITHUB_TOKEN does not fire website.yml's "release: published"
