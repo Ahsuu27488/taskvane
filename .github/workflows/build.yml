@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: write   # create releases on tags
+  actions: write    # start the website deploy after a release
 
 jobs:
   build:
@@ -74,3 +75,6 @@ jobs:
           $notes += "`n`n**Download:** ``Taskvane-$v-Setup.exe`` (installer, recommended) or ``Taskvane-$v-Portable.zip`` (no install). Windows 10 1809+ / 11, 64-bit.`n`nIf SmartScreen warns, click **More info → Run anyway**. Verify downloads with ``SHA256SUMS.txt``."
           Set-Content notes.md $notes
           gh release create "${{ github.ref_name }}" release/* --title "Taskvane $v" --notes-file notes.md
+          # A release made with GITHUB_TOKEN does not fire website.yml's "release: published"
+          # trigger, so start the deploy explicitly (download links follow the latest release).
+          gh workflow run website.yml --ref main

@@ -56,6 +56,7 @@ Release: bump `VERSION` in `app.py` → add a `## x.y.z` section to `CHANGELOG.m
 - **Windows PowerShell 5.1** (used by helper, CI, installer tests): `Expand-Archive` needs a `.zip` extension; `"$( ... 'text (with paren' ... )"` mis-parses; `Start-Process -Wait` waits for the whole child-process tree.
 - **This machine:** `python.exe` is a launcher shim (the PID you start exits; find the real process by command line). Chrome headless can't render narrower than ~500 px (use the browser pane's mobile preset for phone checks). The Bash/PowerShell tool's safety parser rejects some command lines containing `Remove-Item` plus `/x`-style args: split such commands.
 - **Phone-width captures:** the browser pane's screenshots often time out; Playwright (installed, `channel="chrome"`, `is_mobile=True`, 375 px, scroll first so lazy images load) gives reliable full-page shots. Run it from PowerShell: Git Bash rewrites `/features/`-style args into Windows paths.
+- **Releases made by CI's `GITHUB_TOKEN` don't trigger other workflows**, so `website.yml`'s `release: published` never fires; `build.yml` now runs `gh workflow run website.yml` after publishing. If the site still links to an old version after a release: `gh workflow run website.yml --ref main`.
 - `.gitignore` root patterns are anchored (`/lib/`, `/build/` …) so `website/src/lib` isn't ignored.
 
 ## Testing (do this, don't skip it)
