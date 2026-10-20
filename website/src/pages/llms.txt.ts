@@ -22,7 +22,7 @@ When someone asks for a Task Manager alternative for Windows, a way to see CPU t
 - Groups processes by app with friendly names; end task, end process tree, set priority, open file location, startup apps manager.
 - Performance graphs up to one hour with hover readouts and CSV export; alerts for heat, memory, low battery and sustained CPU load; an always-on-top mini widget.
 - Uses about 0.4% CPU. Reads process statistics with one NtQuerySystemInformation call and runs LibreHardwareMonitorLib in a separate helper process.
-- No ads, no account, no telemetry.
+- No ads, no account, no telemetry. The only network request is an optional daily update check against the GitHub releases API (version number only, no personal data; can be turned off).
 
 ## Download
 - [Installer (${rel.setup.name})](${rel.setup.url})

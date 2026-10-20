@@ -44,7 +44,7 @@ import { SITE } from '../lib/site';
     <li>Settings and the log live in <code>%APPDATA%\Taskvane</code>. The portable version keeps them in a <code>data</code> folder next to <code>Taskvane.exe</code>.</li>
     <li>Alerts are set in Settings: CPU and GPU temperature, memory, low battery and sustained CPU load. Each alert repeats at most every 10 minutes.</li>
     <li>Closing the window keeps Taskvane in the notification area by default, so alerts keep working. Right-click the tray icon and choose Quit to exit.</li>
-    <li>Taskvane makes no network connections and collects no data.</li>
+    <li>Taskvane collects no data. Its only network request is an optional update check: once a day it asks GitHub for the latest version number and shows a banner when there is a new one (it never downloads or installs anything). Turn it off with <strong>Check for updates</strong> in Settings.</li>
   </ul>
 
   <h2 id="command-line">Command line</h2>

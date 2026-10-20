@@ -107,6 +107,19 @@ function renderChrome() {
   const st = cpuSensorState();
   $('adminBanner').hidden = !st;
   if (st) setHTML($('adminBanner'), st);
+  const up = updateState();
+  $('updateBanner').hidden = !up;
+  if (up) setHTML($('updateBanner'), up);
+}
+
+// A newer release found by the daily check (Python side). Notify only: the user downloads it.
+let updateDismissed = null;  // hidden for this session with ×; "Skip this version" persists
+function updateState() {
+  const u = S.update;
+  if (!u || u.version === updateDismissed) return null;
+  return `<div class="grow"><b>Taskvane ${esc(u.version)} is available.</b> <span class="hint">You have ${esc(S.version)}. Installed with winget or Scoop? Run <code>winget upgrade Ahsuu27488.Taskvane</code> or <code>scoop update taskvane</code> instead.</span></div>
+    <button class="btn" data-url="${esc(u.url)}">What's new</button><button class="btn primary" data-url="https://taskvane.ahsandev.site/download/">Download</button>
+    <button class="btn" data-act="skipUpdate">Skip this version</button><button class="btn icon" data-act="dismissUpdate" title="Hide until next start" aria-label="Hide">×</button>`;
 }
 
 // Only touch the DOM when content changes, so buttons inside stay clickable.
@@ -628,6 +641,8 @@ document.addEventListener('click', async e => {
     else toast('Restarting as administrator…');
   }
   if (act === 'openLog') api.open_log();
+  if (act === 'dismissUpdate' && S?.update) { updateDismissed = S.update.version; renderChrome(); }
+  if (act === 'skipUpdate' && S?.update) { await api.skip_update(S.update.version); updateDismissed = S.update.version; renderChrome(); toast(`You won't be told about ${S.update.version} again.`); }
   if (act === 'export') { const r = await api.export_history(); if (r.ok) toast('Saved ' + r.path); else if (r.error) toast(r.error); }
   if (act === 'resetMinMax') { await api.reset_minmax(); loadSensors(); }
   if (act === 'refreshStartup') loadStartup();
@@ -645,6 +660,7 @@ function renderSettingsInfo() {
     ? `LibreHardwareMonitor · ${S.lhm.count} sensors · CPU sensors ${S.hw.cpu_temp != null ? 'active' : 'off'}${S.lhm.restarts ? ` · helper restarted ${S.lhm.restarts}×` : ''} · v${S.version}`
     : 'Not available: ' + S.lhm.error;
   $('aboutVersion').textContent = 'Version ' + S.version;
+  $('updateDesc').textContent = S.update ? `Version ${S.update.version} is available.` : '';
   const pw = S.pawnio || {};
   $('pawnioDesc').textContent = pw.installed ? `Installed${pw.version ? ' · version ' + pw.version : ''}${pw.outdated ? ' · update available' : ''}` : "Not installed. Needed for CPU temperature and CPU power; install it from its author's site.";
   $('pawnioBtn').hidden = pw.installed && !pw.outdated;

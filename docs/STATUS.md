@@ -1,10 +1,10 @@
 # Status
 
-_Last updated: 2026-10-20 (PawnIO no longer bundled; 1.2.1 ready, not tagged)_
+_Last updated: 2026-10-20 (update notifications on main; PawnIO unbundled in 1.2.1)_
 
 ## Live
 
-- **App:** `main` is **1.2.1** (PawnIO unbundled), **not tagged/released yet**; waiting for the owner's OK. Latest release is still v1.2.0 at https://github.com/Ahsuu27488/taskvane/releases/tag/v1.2.0 (installer, portable zip, SHA256SUMS). The tag points at the source the binaries were built from.
+- **App:** v1.2.1, released 2026-10-20 at https://github.com/Ahsuu27488/taskvane/releases/tag/v1.2.1 (installer, portable zip, SHA256SUMS; no PawnIO inside, checked). v1.2.0's installer/zip/SHA256SUMS were removed from its release (they bundled PawnIO; backup in `%USERPROFILE%\taskvane-v1.2.0-assets-backup`); its notes point to 1.2.1 and the demo reels stay attached there.
 - **Website:** https://taskvane.ahsandev.site (GitHub Pages, HTTPS enforced, cert valid to 2027-01-13). Cloudflare DNS: `CNAME taskvane → ahsuu27488.github.io`, **DNS only** (grey cloud).
 - **CI:** `build.yml` passes on windows-latest (build + smoke test). `website.yml` deploys on changes to `website/**`, `CHANGELOG.md`, `app.py`, and on new releases.
 - **GitHub profile:** README rewritten in repo `Ahsuu27488/Ahsuu27488` (renamed from `aboutMe`).
@@ -26,6 +26,14 @@ _Last updated: 2026-10-20 (PawnIO no longer bundled; 1.2.1 ready, not tagged)_
 - Home: new "Also in Taskvane" grid (alerts, mini widget, startup apps, history, portable, privacy); phone-only "Send link to my PC" note (Web Share / copy); app screenshots run off the right edge on phones so they're readable.
 - Verified with Playwright captures at 375 px and 1440 px (scripts in the session scratchpad; `website/scripts/shoot.ps1` still covers ≥500 px).
 
+## Update notifications (2026-10-20, on `main`, not released)
+
+- New: daily update check (`App._update_loop` in `app.py`) → `get_stats()["update"]` → Overview banner with What's new / Download / Skip this version / × (hide until restart), and one tray notification per new version. Settings > About > **Check for updates** (default ON). Off = no request.
+- Verified from source: a real check stored `latest 1.2.0` and later `1.2.1` (no banner, since we run 1.2.1); faked `latest 9.9.9` → banner rendered; **Skip this version** hid it and saved `skipped`; with the toggle off there was no request in 45 s; turning it on ran the check. App cost 0.32% CPU (30 s, 9 processes).
+- Privacy wording updated (README, SECURITY.md, website FAQ, docs, home, code-signing policy, llms.txt).
+- **Owner decision:** default ON vs OFF. Note the SignPath privacy template sentence ("will not transfer any information … unless specifically requested by the user"): an on-by-default check may need to become an opt-in prompt (ask once on first run) before applying. Flipping the default is one line (`DEFAULTS["check_updates"]` in `app.py`).
+- **Follow-up (after code signing):** optional download-and-install of the update. Not built on purpose (see DECISIONS.md).
+
 ## Next steps
 
 1. **Google Search Console**: verified 2026-10-16 (URL-prefix property `https://taskvane.ahsandev.site/`, owner's Google account) via `website/public/google07f290b9883c4ddb.html` (keep that file forever). `sitemap-index.xml` submitted. Indexing requested for `/` and `/download/`. **Bing Webmaster Tools**: imported from GSC 2026-10-16, sitemap status Success. Check GSC → Pages in about a week. Possible later improvement: IndexNow ping from `website.yml` on each deploy.
@@ -35,7 +43,7 @@ _Last updated: 2026-10-20 (PawnIO no longer bundled; 1.2.1 ready, not tagged)_
 3. **Ad reel**: 9:16 Remotion reel in English (Liam voice, 46 s) and Hinglish (Bunty voice, 50 s), with an original ElevenLabs synthwave track. Source is a separate local project `C:\dev\taskvane-reel` (not in this repo; its README covers re-rendering). The MP4s are attached to the v1.2.0 release as `Taskvane-demo-reel-*.mp4` and, compressed (~9 MB), served from the website at `/video/taskvane-demo-{en,hinglish}.mp4` (`website/public/video/`). The README "Demo video" section links to the website copies, because release assets always download instead of playing (posters in `docs/screenshots/reel-*.jpg`). For a future release, re-upload them or update the README links. Posting on Instagram is in the owner's Reminders. The music take wasn't checked for vocals: ElevenLabs credits ran out.
 4. Launch posts: drafts for Show HN, r/Windows11, r/pcmasterrace, Product Hunt and awesome lists are in `docs/launch.md` (local only, gitignored, on the owner's PC); the owner posts them.
 5. **Code signing (SignPath Foundation)**: requirements met on our side as of 2026-10-17: code signing policy + privacy at `/code-signing/`, linked from the footer (every page), download page and README. Form answers are in local `docs/launch.md`. The owner submits (it creates a SignPath account; CAPTCHA). Weak spot: their "Reputation" field (0 stars, a handful of downloads), so submitting after the launch posts / winget merge is wiser. Needs GitHub 2FA. After approval: change "We're applying" wording to the final credit line and add the SignPath step to `build.yml`.
-6. **PawnIO redistribution: resolved by unbundling (1.2.1).** namazso replied 2026-10-17: unmodified redistribution of PawnIO is fine on its own, but bundling it in a GPL-3.0 app breaks GPL-3's Installation Information clause (they hold copyright on a GPL patch in LibreHardwareMonitor); GPL-3 projects like OpenRGB link to pawnio.eu instead. Done on `main`: no PawnIO in fetch_deps/build/installer/zip, "Enable CPU sensors" opens pawnio.eu, site/README/docs updated (DECISIONS.md row). **Owner decisions pending:** (a) tag `v1.2.1` (publishes the release; the website's footer already says 1.2.1, downloads still point at v1.2.0 until then); (b) what to do with the v1.2.0 release assets, which still bundle PawnIO (replace/delete/leave); (c) update winget PR #453922 (points at the v1.2.0 Setup.exe) to 1.2.1; (d) update `bucket/taskvane.json` in Ahsuu27488/scoop-bucket (and `packaging/` manifests here) to 1.2.1. Also reply to namazso (in the owner's Reminders).
+6. **PawnIO redistribution: resolved (2026-10-20).** namazso said bundling PawnIO in a GPL-3.0 app breaks GPL-3's Installation Information clause; 1.2.1 doesn't bundle it and links to pawnio.eu (DECISIONS.md). Reply sent to namazso 2026-10-20 (same Gmail thread). winget PR #453922 updated to 1.2.1 (manifest validated locally; title/body updated); Scoop bucket updated to 1.2.1; `packaging/` manifests here too. The website needed a manual redeploy after the release (CLAUDE.md trap; `build.yml` now triggers it) and links to v1.2.1.
 7. GitHub profile README (repo `Ahsuu27488/Ahsuu27488`) and the site's About page now lead with AI work: Chronos (OpenAI Agents SDK multi-agent, 7 self-written MCP tools, Whisper voice, Qdrant semantic search, SSE/push/email notifications, K8s/Dapr/Kafka) and the Physical AI textbook (RAG over Qdrant, LLM Urdu translation). Claims checked against those repos' code; chronos.ahsandev.site is down, so links use the Vercel URL.
 8. Owner to-dos: set GitHub bio (`gh auth refresh -h github.com -s user`, or paste in Settings), pin repos on profile, review About page wording (`website/src/pages/about.astro`).
 

@@ -7,6 +7,7 @@ import os
 import sys
 import threading
 import time
+import urllib.request
 import webbrowser
 from ctypes import wintypes
 
@@ -28,7 +29,12 @@ DEFAULTS = {
     "alerts": {"enabled": True, "cpu_temp": 90, "gpu_temp": 85, "mem": 90, "battery_low": 15, "cpu_load": 95},
     "window": {"width": 1280, "height": 820},
     "mini": {"x": None, "y": None},
+    # Optional daily version check (the app's only network request). Off = no request at all.
+    "check_updates": True,
+    "update": {"last_check": 0, "latest": None, "url": None, "skipped": None, "notified": None},
 }
+RELEASES_API = "https://api.github.com/repos/Ahsuu27488/taskvane/releases/latest"
+UPDATE_EVERY = 24 * 3600
 
 user32 = ctypes.windll.user32
 kernel32 = ctypes.windll.kernel32
@@ -220,6 +226,16 @@ def tray_image(text, level="neutral"):
 
 # ------------------------------------------------------------ app
 
+def version_tuple(v):
+    """"v1.2.10" -> (1, 2, 10); anything unparsable sorts lowest."""
+    out = []
+    for part in str(v or "").lstrip("vV").split("-")[0].split("."):
+        if not part.isdigit():
+            break
+        out.append(int(part))
+    return tuple(out)
+
+
 class App:
     def __init__(self, start_hidden):
         self.settings = load_settings()
@@ -232,6 +248,7 @@ class App:
         self.last_alert = {}
         self.notice = None
         self.pawnio = actions.pawnio_status()
+        self.update_wake = threading.Event()
         self.api = Api(self)
         width, height = fit_to_work_area(self.settings["window"].get("width", 1280), self.settings["window"].get("height", 820))
         self.window = webview.create_window(
@@ -354,6 +371,58 @@ class App:
                     return
         self._pawnio_watch = threading.Thread(target=watch, name="pawnio-watch", daemon=True)
         self._pawnio_watch.start()
+
+    # ---- update check (notify only: never downloads or installs anything)
+    def _update_loop(self):
+        time.sleep(30)  # keep it off the startup path
+        retry_at = 0
+        while not self.quitting:
+            u = self.settings["update"]
+            now = time.time()
+            if self.settings.get("check_updates", True) and now >= retry_at and now - (u.get("last_check") or 0) >= UPDATE_EVERY:
+                if self._check_update_once():
+                    self._notify_update()
+                else:
+                    retry_at = now + 6 * 3600  # offline / rate-limited: try again later, no tight loop
+            self.update_wake.wait(3600)
+            self.update_wake.clear()
+
+    def _check_update_once(self):
+        """One GET to GitHub's public releases API. No cookies, no IDs: only a generic User-Agent,
+        which GitHub requires."""
+        try:
+            req = urllib.request.Request(RELEASES_API, headers={
+                "User-Agent": "Taskvane-update-check", "Accept": "application/vnd.github+json"})
+            with urllib.request.urlopen(req, timeout=15) as r:
+                data = json.loads(r.read(200_000).decode("utf-8"))
+            tag, url = data.get("tag_name") or "", data.get("html_url") or ""
+            if not version_tuple(tag) or not url.startswith("https://github.com/"):
+                raise ValueError("unexpected response")
+            u = self.settings["update"]
+            u.update({"last_check": time.time(), "latest": tag.lstrip("vV"), "url": url})
+            write_settings(self.settings)
+            log.info("update check: latest %s, running %s", u["latest"], VERSION)
+            return True
+        except Exception as e:
+            log.warning("update check failed: %s", e)
+            return False
+
+    def available_update(self):
+        """The newer release to tell the user about, or None."""
+        u = self.settings["update"]
+        latest = u.get("latest")
+        if (not self.settings.get("check_updates", True) or not latest
+                or version_tuple(latest) <= version_tuple(VERSION) or latest == u.get("skipped")):
+            return None
+        return {"version": latest, "url": u.get("url") or "https://github.com/Ahsuu27488/taskvane/releases/latest"}
+
+    def _notify_update(self):
+        up = self.available_update()
+        u = self.settings["update"]
+        if up and u.get("notified") != up["version"]:
+            u["notified"] = up["version"]
+            write_settings(self.settings)
+            self.notify("Taskvane " + up["version"] + " is available", "Open Taskvane to see what's new and download it.")
 
     def quit(self):
         log.info("quit requested")
@@ -489,6 +558,7 @@ class App:
         # (non-elevated) instance's WebView2 may still be shutting down.
         storage = os.path.join(DATA_DIR, "webview-admin" if self.monitor.admin else "webview")
         threading.Thread(target=self._quit_event_loop, name="quit-event", daemon=True).start()
+        threading.Thread(target=self._update_loop, name="update-check", daemon=True).start()
         threading.Timer(20, self._check_ui_connected).start()
         webview.start(gui="edgechromium", debug="--debug" in sys.argv, private_mode=False, storage_path=storage)
 
@@ -519,6 +589,7 @@ class Api:
         snap = self._app.monitor.snapshot()
         snap["version"] = VERSION
         snap["pawnio"] = self._app.pawnio
+        snap["update"] = self._app.available_update()
         return snap
 
     def get_history(self, seconds):
@@ -576,12 +647,14 @@ class Api:
                 if not r["ok"]:
                     return r
             s = self._app.settings
-            for k in ("unit", "close_to_tray", "tray_metric"):
+            for k in ("unit", "close_to_tray", "tray_metric", "check_updates"):
                 if k in new:
                     s[k] = new[k]
             if isinstance(new.get("alerts"), dict):
                 s["alerts"].update({k: v for k, v in new["alerts"].items() if k in DEFAULTS["alerts"]})
             write_settings(s)
+            if s.get("check_updates"):
+                self._app.update_wake.set()  # turned on: check now if a day has passed
             return {"ok": True}
         except Exception as e:
             return {"ok": False, "error": str(e)}
@@ -615,6 +688,11 @@ class Api:
 
     def pawnio_status(self):
         return actions.pawnio_status()
+
+    def skip_update(self, version):
+        self._app.settings["update"]["skipped"] = str(version)
+        write_settings(self._app.settings)
+        return True
 
     def enable_cpu_sensors(self):
         """CPU temperature/power need the PawnIO driver + admin. PawnIO isn't bundled (see

@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- **Update notifications.** Once a day Taskvane asks GitHub for the latest version number and, when there's a newer one, shows a banner on the Overview page ("Taskvane X.Y.Z is available") with **What's new**, **Download** and **Skip this version**, plus one Windows notification per new version. It only tells you: nothing is downloaded or installed. The request carries no personal data, and **Settings > Check for updates** turns it off (then Taskvane makes no network requests at all). winget and Scoop users can keep using `winget upgrade` / `scoop update`.
+- Privacy wording on the website, README and SECURITY.md now describes this check instead of saying nothing leaves your PC
+
 ## 1.2.1
 
 - **PawnIO is no longer bundled.** CPU temperature and CPU power still use the signed PawnIO driver, but you now install it from its author's site, https://pawnio.eu/. **Enable CPU sensors** opens that page; Taskvane notices when PawnIO is installed and then offers to restart as administrator. Why: Taskvane is GPL-3.0, and shipping it together with a signed, proprietary driver build conflicts with GPL-3 (PawnIO's author pointed this out; other GPL-3 apps such as OpenRGB do the same). If PawnIO is already installed, nothing changes for you.

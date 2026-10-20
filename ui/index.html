@@ -29,6 +29,7 @@
   <!-- ================= OVERVIEW ================= -->
   <section class="page active" id="p-overview">
     <div class="page-h"><h1>Overview</h1><span class="sub" id="ovSub"></span><span class="grow"></span><span class="sub num" id="ovUptime"></span></div>
+    <div class="banner" id="updateBanner" hidden></div>
     <div class="banner" id="adminBanner" hidden></div>
     <div class="grid g4">
       <div class="card tile" data-goto="cpu">
@@ -154,6 +155,7 @@
       <div class="li"><div><div class="t">Sensor engine</div><div class="s" id="engineDesc"></div></div><span></span><button class="btn" data-act="openLog">Open log</button></div>
     </div></div>
     <div class="card"><div class="card-h"><h2>About</h2><span class="meta" id="aboutVersion"></span></div><div class="list">
+      <div class="li"><div><div class="t">Check for updates</div><div class="s">Once a day, asks GitHub for the newest version number and tells you when there's an update.</div><div class="s">Sends nothing about you or your PC and installs nothing. When off, Taskvane makes no network requests.</div><div class="s" id="updateDesc"></div></div><span></span><label class="switch"><input type="checkbox" data-set="check_updates"><span></span></label></div>
       <div class="li"><div><div class="t">Taskvane</div><div class="s">A better Task Manager for Windows 11: usage, temperatures and power draw in one place.</div></div><span></span><button class="btn" data-url="https://taskvane.ahsandev.site">Website</button></div>
       <div class="li"><div><div class="t">Made by Muhammad Ahsan</div><div class="s">Open source under the GPL-3.0 license. Bug reports, ideas and pull requests are welcome.</div></div><span></span><span style="display:flex;gap:8px"><button class="btn" data-url="https://github.com/Ahsuu27488/taskvane">GitHub</button><button class="btn" data-url="https://github.com/Ahsuu27488/taskvane/issues/new/choose">Report a problem</button></span></div>
     </div></div>

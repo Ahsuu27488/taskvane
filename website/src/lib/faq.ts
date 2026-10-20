@@ -15,7 +15,7 @@ export const FAQ: { q: string; a: string }[] = [
   },
   {
     q: 'Is Taskvane free?',
-    a: 'Yes. Taskvane is free and open source under the GPL-3.0 license. It has no ads, no account and no telemetry, and makes no network connections except opening links you click.',
+    a: 'Yes. Taskvane is free and open source under the GPL-3.0 license. It has no ads, no account and no telemetry, and the only network request it makes on its own is an optional daily update check that asks GitHub for the latest version number (no personal data; turn it off in Settings).',
   },
   {
     q: 'Why does Taskvane need administrator rights?',

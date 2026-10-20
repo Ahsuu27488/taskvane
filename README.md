@@ -82,7 +82,7 @@ Windows only exposes CPU temperature and power to apps running as **administrato
 
 ## FAQ
 
-**Is Taskvane free?** Yes, free and open source under GPL-3.0, with no ads and no telemetry. Nothing leaves your PC.
+**Is Taskvane free?** Yes, free and open source under GPL-3.0, with no ads and no telemetry. The only network request it makes on its own is an optional daily update check: it asks GitHub for the latest version number, sends nothing about you or your PC, and can be turned off in Settings (then Taskvane makes no network requests at all).
 
 **Is the PawnIO driver safe?** It's a digitally signed driver used by LibreHardwareMonitor and other monitoring tools. Taskvane never installs it for you: you download it from its author's site. You can remove it from Settings → Apps.
 

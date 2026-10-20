@@ -12,7 +12,7 @@ Please **don't open a public issue**. Report it privately through [GitHub Securi
 - It ends or re-prioritizes processes, and changes startup entries, **only when you click** those actions.
 - With "Always start as administrator" on, it creates the scheduled tasks `Taskvane (administrator)` and `Taskvane (administrator, sign-in)`. Turning the setting off, or uninstalling, removes them.
 
-Taskvane makes **no network connections** except opening links you click in your browser. There is no telemetry.
+Taskvane makes **one optional network request**: once a day it asks the public GitHub API (`api.github.com/repos/Ahsuu27488/taskvane/releases/latest`) for the latest version number, so it can tell you about updates. The request carries no personal data or identifiers, nothing is downloaded or installed, and **Settings > Check for updates** turns it off, after which Taskvane makes no network connections except opening links you click in your browser. There is no telemetry.
 
 ## Verifying downloads
 
