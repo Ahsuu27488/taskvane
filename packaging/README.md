@@ -3,18 +3,18 @@
 Ready-to-submit manifests for the current release. Update the version, URLs and hashes
 (from the release's `SHA256SUMS.txt`) for each new release.
 
-## winget (`winget/1.2.0/`)
+## winget (`winget/1.2.1/`)
 
-Validated with `winget validate --manifest packaging\winget\1.2.0` (schema 1.12).
+Validated with `winget validate --manifest packaging\winget\1.2.1` (schema 1.12).
 Submitted 2026-10-16: https://github.com/microsoft/winget-pkgs/pull/453922 (the owner accepts the
 Microsoft CLA when the bot asks).
 
 To submit, fork `microsoft/winget-pkgs` and add the three files under
-`manifests/a/Ahsuu27488/Taskvane/1.2.0/`, then open a PR. Or let `wingetcreate` do it:
+`manifests/a/Ahsuu27488/Taskvane/1.2.1/`, then open a PR. Or let `wingetcreate` do it:
 
 ```powershell
 winget install wingetcreate
-wingetcreate submit --token <GitHub token> packaging\winget\1.2.0
+wingetcreate submit --token <GitHub token> packaging\winget\1.2.1
 ```
 
 Later versions: `wingetcreate update Ahsuu27488.Taskvane --version X.Y.Z --urls <Setup.exe URL> --submit`.
