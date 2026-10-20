@@ -12,7 +12,6 @@ import psutil
 
 from .log import log
 from .monitor import NO_WINDOW, file_description, run
-from .paths import PAWNIO_SETUP
 
 PRIORITIES = {
     "idle": psutil.IDLE_PRIORITY_CLASS, "below": psutil.BELOW_NORMAL_PRIORITY_CLASS,
@@ -231,7 +230,11 @@ def relaunch_as_admin(extra=""):
 
 # ------------------------------------------------------------ PawnIO driver (CPU sensors)
 
-PAWNIO_BUNDLED_VERSION = (2, 2, 0)
+# Not bundled: Taskvane is GPL-3.0 and PawnIO's signed driver isn't, so shipping them together
+# would break GPL-3's "Installation Information" rule. Users install it from its author's site,
+# as OpenRGB (also GPL-3) does. We only detect it.
+PAWNIO_URL = "https://pawnio.eu/"
+PAWNIO_MIN_VERSION = (2, 2, 0)  # what LibreHardwareMonitorLib 0.9.6 was tested with
 
 
 def _ver_tuple(s):
@@ -239,7 +242,7 @@ def _ver_tuple(s):
 
 
 def pawnio_status():
-    """{'installed': bool, 'version': 'x.y.z'|None, 'outdated': bool, 'bundled': bool}"""
+    """{'installed': bool, 'version': 'x.y.z'|None, 'outdated': bool}"""
     # The setup's Uninstall entry is authoritative: after an uninstall the driver
     # service key lingers (until reboot), so it can't be used to detect PawnIO.
     installed, version = False, None
@@ -258,27 +261,8 @@ def pawnio_status():
         except OSError:
             pass
     vt = _ver_tuple(version)
-    return {"installed": installed, "version": version, "bundled": os.path.exists(PAWNIO_SETUP),
-            "outdated": bool(installed and vt and vt < PAWNIO_BUNDLED_VERSION)}
-
-
-def install_pawnio():
-    """Silently install the bundled, signed PawnIO driver. Requires an elevated process."""
-    if not os.path.exists(PAWNIO_SETUP):
-        return {"ok": False, "error": "PawnIO installer is missing from this build."}
-    log.info("installing PawnIO from %s", PAWNIO_SETUP)
-    try:
-        r = subprocess.run([PAWNIO_SETUP, "-install", "-silent"], capture_output=True, timeout=180, creationflags=NO_WINDOW)
-    except Exception as e:
-        log.exception("PawnIO install failed to run")
-        return {"ok": False, "error": str(e)}
-    code = r.returncode
-    log.info("PawnIO setup exit code %s; status now %s", code, pawnio_status())
-    if code in (0, 3010):  # ERROR_SUCCESS, ERROR_SUCCESS_REBOOT_REQUIRED
-        return {"ok": True, "reboot": code == 3010}
-    if code == 5:
-        return {"ok": False, "error": "Access denied. PawnIO can only be installed from administrator mode."}
-    return {"ok": False, "error": f"PawnIO setup failed (error {code})."}
+    return {"installed": installed, "version": version,
+            "outdated": bool(installed and vt and vt < PAWNIO_MIN_VERSION)}
 
 
 # ------------------------------------------------------------ "always run as administrator" (no UAC prompt)

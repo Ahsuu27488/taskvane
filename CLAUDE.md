@@ -21,11 +21,11 @@ Taskvane is a free, open-source (GPL-3.0) **Task Manager alternative for Windows
 | `taskvane/monitor.py` | Collectors (system / processes / sensors) + 1-hour history; `summarize()` turns raw LHM sensors into headline numbers |
 | `taskvane/ntproc.py` | All processes via one `NtQuerySystemInformation` call |
 | `taskvane/lhm.py` + `lhm_host.ps1` | LibreHardwareMonitorLib in an **out-of-process** Windows PowerShell 5.1 helper streaming JSON; supervised and auto-restarted |
-| `taskvane/actions.py` | Process actions, startup apps, PawnIO install/status, elevated scheduled tasks, autostart |
+| `taskvane/actions.py` | Process actions, startup apps, PawnIO detection (not bundled), elevated scheduled tasks, autostart |
 | `taskvane/paths.py`, `log.py` | Paths (portable mode via `portable.txt`), rotating log `%APPDATA%\Taskvane\taskvane.log` |
 | `ui/` | Plain HTML/CSS/JS UI (no build step). `app.js` talks to Python via `window.pywebview.api` |
 | `installer/Taskvane.iss` | Inno Setup installer |
-| `tools/` | `fetch_deps.ps1` (pinned + SHA-256-verified LHM & PawnIO into `lib/`), `make_icon.py`, `make_version_info.py`, `snap.py` / `clickseq.py` (window capture + scripted clicks for testing) |
+| `tools/` | `fetch_deps.ps1` (pinned + SHA-256-verified LHM into `lib/`), `make_icon.py`, `make_version_info.py`, `snap.py` / `clickseq.py` (window capture + scripted clicks for testing) |
 | `packaging/` | winget + Scoop manifests (update per release) |
 | `website/` | Astro static site → GitHub Pages at https://taskvane.ahsandev.site |
 | `.github/workflows/` | `build.yml` (exe/installer/portable + smoke test; publishes a release on `v*` tags), `website.yml` (deploys the site) |
@@ -51,6 +51,7 @@ Release: bump `VERSION` in `app.py` → add a `## x.y.z` section to `CHANGELOG.m
 - **Expensive Windows APIs**: `PowerGetEffectiveOverlayScheme` hung when called concurrently (power mode was removed later). Poll slow APIs from one thread and cache.
 - **psutil per-process calls cost ~6% CPU**; use `ntproc.snapshot()`. Target total app cost ≈0.4% CPU; measure if you touch a collector.
 - **PawnIO detection = its Uninstall registry entry**, not the service key (that lingers after uninstall).
+- **Never bundle PawnIO again** (or any signed, proprietary driver build) in the GPL-3.0 download: see DECISIONS.md. The app links to https://pawnio.eu/.
 - **Inno Setup `/SUPPRESSMSGBOXES` answers Yes** to MsgBox; guard user-data deletion with `not UninstallSilent()`.
 - **Windows PowerShell 5.1** (used by helper, CI, installer tests): `Expand-Archive` needs a `.zip` extension; `"$( ... 'text (with paren' ... )"` mis-parses; `Start-Process -Wait` waits for the whole child-process tree.
 - **This machine:** `python.exe` is a launcher shim (the PID you start exits; find the real process by command line). Chrome headless can't render narrower than ~500 px (use the browser pane's mobile preset for phone checks). The Bash/PowerShell tool's safety parser rejects some command lines containing `Remove-Item` plus `/x`-style args: split such commands.
@@ -63,7 +64,7 @@ Release: bump `VERSION` in `app.py` → add a `## x.y.z` section to `CHANGELOG.m
 - Window capture without screen access: `python tools\snap.py "Taskvane" out.png` (PrintWindow).
 - **Elevated window**: normal processes can't capture or click it. Run `tools\clickseq.py` elevated (`Start-Process python -Verb RunAs …`) to click sidebar items and capture pages; sidebar CSS y: overview 107, performance 144, processes 181, sensors 218, power 254, startup 291, settings 328 (x 110).
 - `Taskvane.exe --quit` closes any running copy (even elevated) and waits until it has exited.
-- Installer lifecycle: silent install with `/TASKS="desktopicon,pawnio,alwaysadmin"`, run via `schtasks /Run /TN "Taskvane (administrator)"`, silent uninstall with `/LOG=…`, then check nothing is left (folder, shortcuts, tasks, uninstall entry).
+- Installer lifecycle: silent install with `/TASKS="desktopicon,alwaysadmin"`, run via `schtasks /Run /TN "Taskvane (administrator)"`, silent uninstall with `/LOG=…`, then check nothing is left (folder, shortcuts, tasks, uninstall entry).
 - Website: `npx astro dev`, then the browser pane, or `website\scripts\shoot.ps1` for full-page captures.
 
 ## Keeping these docs current

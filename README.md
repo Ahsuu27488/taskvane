@@ -73,7 +73,8 @@ Requires Windows 10 (1809 or later) or Windows 11, 64-bit. The WebView2 runtime 
 
 Windows only exposes CPU temperature and power to apps running as **administrator**, through a hardware driver. Taskvane uses the same open-source sensor library as [LibreHardwareMonitor](https://github.com/LibreHardwareMonitor/LibreHardwareMonitor), with the digitally signed [PawnIO](https://pawnio.eu/) driver.
 
-- In the app, **Enable CPU sensors** restarts Taskvane as administrator and installs PawnIO. That's one UAC prompt, one time. The installer can also do this for you.
+- Install PawnIO from its author's site, [pawnio.eu](https://pawnio.eu/). In the app, **Enable CPU sensors** opens that page, notices when PawnIO is installed, and then restarts Taskvane as administrator (one UAC prompt).
+- Taskvane doesn't bundle PawnIO. Taskvane is GPL-3.0 and PawnIO's signed driver is distributed by its author, so you get it from the source (as OpenRGB users do).
 - **Settings → Always start as administrator** lets later launches start with admin rights and **no UAC prompt**, using an elevated scheduled task (as tools like HWiNFO do).
 - Without admin rights you still get GPU temperatures, usage, battery power draw and health.
 
@@ -83,7 +84,7 @@ Windows only exposes CPU temperature and power to apps running as **administrato
 
 **Is Taskvane free?** Yes, free and open source under GPL-3.0, with no ads and no telemetry. Nothing leaves your PC.
 
-**Is the PawnIO driver safe?** It's a digitally signed driver used by LibreHardwareMonitor and other monitoring tools, and it's only installed if you choose to. You can remove it from Settings → Apps.
+**Is the PawnIO driver safe?** It's a digitally signed driver used by LibreHardwareMonitor and other monitoring tools. Taskvane never installs it for you: you download it from its author's site. You can remove it from Settings → Apps.
 
 **Does it slow my PC down?** No. Taskvane reads all process stats in a single system call (the same source Task Manager uses) and runs hardware sensors in a separate helper process. Total cost is about 0.4% CPU.
 
@@ -95,7 +96,7 @@ Windows only exposes CPU temperature and power to apps running as **administrato
 git clone https://github.com/Ahsuu27488/taskvane
 cd taskvane
 pip install -r requirements.txt
-powershell -ExecutionPolicy Bypass -File tools\fetch_deps.ps1   # LibreHardwareMonitor + PawnIO, hash-verified
+powershell -ExecutionPolicy Bypass -File tools\fetch_deps.ps1   # LibreHardwareMonitor, hash-verified
 python app.py
 ```
 

@@ -104,7 +104,7 @@ export const COMPARISONS: Comparison[] = [
       ['History', 'Plot window', 'Dashboards up to 1 hour, CSV export'],
       ['Alerts', 'no', 'yes'],
       ['Remote web server', 'yes', 'no'],
-      ['Installer and one-click driver setup', 'Portable app', 'Installer or portable; one-click PawnIO setup'],
+      ['Installer and one-click driver setup', 'Portable app', 'Installer or portable; guided PawnIO setup'],
     ],
     otherWins: [
       'A built-in web server for viewing sensors from another device.',

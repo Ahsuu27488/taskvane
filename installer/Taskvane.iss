@@ -25,11 +25,11 @@ OutputDir=..\release
 OutputBaseFilename=Taskvane-{#AppVersion}-Setup
 Compression=lzma2/ultra64
 SolidCompression=yes
-; Program Files + the PawnIO driver need admin rights during setup.
+; Program Files + the elevated scheduled task need admin rights during setup.
 PrivilegesRequired=admin
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
-; PawnIO needs Windows 10 1809 (RS5) or later.
+; PawnIO (installed separately, for CPU sensors) needs Windows 10 1809 (RS5) or later.
 MinVersion=10.0.17763
 ; We close the app ourselves (it may be running elevated) with Taskvane.exe --quit.
 CloseApplications=no
@@ -40,20 +40,21 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "Create a &desktop shortcut"; GroupDescription: "Shortcuts:"
-Name: "pawnio"; Description: "Install the PawnIO driver (needed for CPU temperature and CPU power)"; GroupDescription: "CPU sensors:"
 Name: "alwaysadmin"; Description: "Always start Taskvane as administrator, so CPU sensors work without a UAC prompt"; GroupDescription: "CPU sensors:"
 Name: "autostart"; Description: "Start Taskvane when I sign in to Windows"; GroupDescription: "Startup:"; Flags: unchecked
 
 [Files]
 Source: "..\dist\Taskvane\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
+[InstallDelete]
+; 1.2.0 bundled PawnIO's setup; upgrades shouldn't keep it.
+Type: filesandordirs; Name: "{app}\_internal\lib\pawnio"
+
 [Icons]
 Name: "{autoprograms}\{#AppName}"; Filename: "{app}\{#AppExe}"; Comment: "Live CPU, GPU, memory, temperatures and power"
 Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#AppExe}"; Tasks: desktopicon
 
 [Run]
-; Signed PawnIO driver setup (bundled). Already installed/up to date is fine.
-Filename: "{app}\_internal\lib\pawnio\PawnIO_setup.exe"; Parameters: "-install -silent"; StatusMsg: "Installing the PawnIO driver..."; Flags: runhidden waituntilterminated; Tasks: pawnio
 ; Startup options go through the app itself (elevated scheduled task and/or Run entry).
 Filename: "{app}\{#AppExe}"; Parameters: "--set-startup {code:AdminFlag} {code:AutostartFlag}"; StatusMsg: "Configuring startup..."; Flags: runhidden waituntilterminated
 Filename: "{app}\{#AppExe}"; Description: "Launch {#AppName}"; Flags: nowait postinstall skipifsilent runasoriginaluser

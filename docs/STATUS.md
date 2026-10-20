@@ -1,19 +1,19 @@
 # Status
 
-_Last updated: 2026-10-17 (demo reel in README + release)_
+_Last updated: 2026-10-20 (PawnIO no longer bundled; 1.2.1 ready, not tagged)_
 
 ## Live
 
-- **App:** v1.2.0, released at https://github.com/Ahsuu27488/taskvane/releases/tag/v1.2.0 (installer, portable zip, SHA256SUMS). The tag points at the source the binaries were built from.
+- **App:** `main` is **1.2.1** (PawnIO unbundled), **not tagged/released yet**; waiting for the owner's OK. Latest release is still v1.2.0 at https://github.com/Ahsuu27488/taskvane/releases/tag/v1.2.0 (installer, portable zip, SHA256SUMS). The tag points at the source the binaries were built from.
 - **Website:** https://taskvane.ahsandev.site (GitHub Pages, HTTPS enforced, cert valid to 2027-01-13). Cloudflare DNS: `CNAME taskvane → ahsuu27488.github.io`, **DNS only** (grey cloud).
 - **CI:** `build.yml` passes on windows-latest (build + smoke test). `website.yml` deploys on changes to `website/**`, `CHANGELOG.md`, `app.py`, and on new releases.
 - **GitHub profile:** README rewritten in repo `Ahsuu27488/Ahsuu27488` (renamed from `aboutMe`).
 
 ## Verified
 
-- Admin flow end to end: Enable CPU sensors → UAC → elevated relaunch → silent PawnIO install → 108 sensors incl. CPU temps and package power; UI connects in admin mode.
+- 1.2.1 CPU sensors flow (2026-10-20): with PawnIO reported missing, **Enable CPU sensors** opens https://pawnio.eu/ and shows the explanation toast; once PawnIO appears in the Uninstall registry the banner switches to **Restart as administrator** within ~3 s (watcher thread); that button hands off to the elevated task → 108 sensors incl. CPU temps and package power. (The missing-PawnIO part was tested from source with `pawnio_status` patched, since PawnIO is installed on this PC.)
 - "Always start as administrator" (elevated scheduled tasks), sign-in task, and turning both off cleanly.
-- Installer lifecycle with the released Setup.exe: install → run via task → uninstall while running leaves nothing behind; settings kept on silent uninstall; PawnIO kept.
+- Installer lifecycle with the 1.2.1 Setup.exe (2026-10-20): upgrade over 1.2.0 removes the old `_internal\lib\pawnio` → run via task → uninstall while running leaves nothing behind; settings kept on silent uninstall; PawnIO untouched. 1.2.1 Setup/zip contain no PawnIO files (Setup ~3 MB smaller).
 - Portable zip keeps all data in `.\data`.
 - App cost ≈0.4% CPU total (app + WebView2 + sensor helper).
 
@@ -35,7 +35,7 @@ _Last updated: 2026-10-17 (demo reel in README + release)_
 3. **Ad reel**: 9:16 Remotion reel in English (Liam voice, 46 s) and Hinglish (Bunty voice, 50 s), with an original ElevenLabs synthwave track. Source is a separate local project `C:\dev\taskvane-reel` (not in this repo; its README covers re-rendering). The MP4s are attached to the v1.2.0 release as `Taskvane-demo-reel-*.mp4` and, compressed (~9 MB), served from the website at `/video/taskvane-demo-{en,hinglish}.mp4` (`website/public/video/`). The README "Demo video" section links to the website copies, because release assets always download instead of playing (posters in `docs/screenshots/reel-*.jpg`). For a future release, re-upload them or update the README links. Posting on Instagram is in the owner's Reminders. The music take wasn't checked for vocals: ElevenLabs credits ran out.
 4. Launch posts: drafts for Show HN, r/Windows11, r/pcmasterrace, Product Hunt and awesome lists are in `docs/launch.md` (local only, gitignored, on the owner's PC); the owner posts them.
 5. **Code signing (SignPath Foundation)**: requirements met on our side as of 2026-10-17: code signing policy + privacy at `/code-signing/`, linked from the footer (every page), download page and README. Form answers are in local `docs/launch.md`. The owner submits (it creates a SignPath account; CAPTCHA). Weak spot: their "Reputation" field (0 stars, a handful of downloads), so submitting after the launch posts / winget merge is wiser. Needs GitHub 2FA. After approval: change "We're applying" wording to the final credit line and add the SignPath step to `build.yml`.
-6. **PawnIO redistribution**: get written OK from namazso (admin@namazso.eu) before wider distribution. Email sent 2026-10-17 from the owner's Gmail; waiting for a reply.
+6. **PawnIO redistribution: resolved by unbundling (1.2.1).** namazso replied 2026-10-17: unmodified redistribution of PawnIO is fine on its own, but bundling it in a GPL-3.0 app breaks GPL-3's Installation Information clause (they hold copyright on a GPL patch in LibreHardwareMonitor); GPL-3 projects like OpenRGB link to pawnio.eu instead. Done on `main`: no PawnIO in fetch_deps/build/installer/zip, "Enable CPU sensors" opens pawnio.eu, site/README/docs updated (DECISIONS.md row). **Owner decisions pending:** (a) tag `v1.2.1` (publishes the release; the website's footer already says 1.2.1, downloads still point at v1.2.0 until then); (b) what to do with the v1.2.0 release assets, which still bundle PawnIO (replace/delete/leave); (c) update winget PR #453922 (points at the v1.2.0 Setup.exe) to 1.2.1; (d) update `bucket/taskvane.json` in Ahsuu27488/scoop-bucket (and `packaging/` manifests here) to 1.2.1. Also reply to namazso (in the owner's Reminders).
 7. GitHub profile README (repo `Ahsuu27488/Ahsuu27488`) and the site's About page now lead with AI work: Chronos (OpenAI Agents SDK multi-agent, 7 self-written MCP tools, Whisper voice, Qdrant semantic search, SSE/push/email notifications, K8s/Dapr/Kafka) and the Physical AI textbook (RAG over Qdrant, LLM Urdu translation). Claims checked against those repos' code; chronos.ahsandev.site is down, so links use the Vercel URL.
 8. Owner to-dos: set GitHub bio (`gh auth refresh -h github.com -s user`, or paste in Settings), pin repos on profile, review About page wording (`website/src/pages/about.astro`).
 
@@ -48,5 +48,5 @@ _Last updated: 2026-10-17 (demo reel in README + release)_
 ## Known limitations
 
 - Whole-system power is only available on battery (Windows limitation); on AC only CPU/GPU package power.
-- CPU sensors need admin + PawnIO.
+- CPU sensors need admin + PawnIO, which users install themselves from pawnio.eu.
 - Not code-signed yet → SmartScreen warning on first run.

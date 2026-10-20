@@ -20,8 +20,8 @@ wingetcreate submit --token <GitHub token> packaging\winget\1.2.0
 Later versions: `wingetcreate update Ahsuu27488.Taskvane --version X.Y.Z --urls <Setup.exe URL> --submit`.
 
 Notes:
-- winget installs silently, so the installer's default tasks apply: desktop icon, PawnIO driver and
-  "always start as administrator" are on, start-at-sign-in is off.
+- winget installs silently, so the installer's default tasks apply: desktop icon and
+  "always start as administrator" are on, start-at-sign-in is off. PawnIO isn't bundled (since 1.2.1).
 - New packages from unsigned publishers get extra validation (SmartScreen / Defender scans) in the
   winget-pkgs pipeline; expect a day or two.
 

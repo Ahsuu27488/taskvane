@@ -11,11 +11,9 @@ $deps = @(
        Sha  = '086D9F1B5A99E643EDC2CFAAAC16051685B551E4C5AC0B32A57C58C0E529C001'
        Dest = 'lhm'; Zip = $true
        # The GUI app's own DLLs (plots, tree view, task scheduler) aren't needed by the library.
-       Skip = '^(OxyPlot|Aga\.Controls|Microsoft\.Win32\.TaskScheduler)' },
-    @{ Name = 'PawnIO setup 2.2.0 (signed by namazso)'
-       Url  = 'https://github.com/namazso/PawnIO.Setup/releases/download/2.2.0/PawnIO_setup.exe'
-       Sha  = '1F519A22E47187F70A1379A48CA604981C4FCF694F4E65B734AAA74A9FBA3032'
-       Dest = 'pawnio'; Zip = $false }
+       Skip = '^(OxyPlot|Aga\.Controls|Microsoft\.Win32\.TaskScheduler)' }
+    # PawnIO is deliberately not bundled (GPL-3 vs. its signed driver): users install it
+    # from https://pawnio.eu/. See docs/DECISIONS.md.
 )
 
 foreach ($d in $deps) {

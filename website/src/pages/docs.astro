@@ -22,11 +22,11 @@ import { SITE } from '../lib/site';
   <h2 id="cpu-sensors">Turning on CPU temperature and power</h2>
   <p>Windows only lets programs read CPU temperature, CPU power and drive temperatures when they run as <strong>administrator</strong>, through a hardware driver. Taskvane uses the signed <a href="https://pawnio.eu/">PawnIO</a> driver, the same one LibreHardwareMonitor uses.</p>
   <ol>
-    <li>Open Taskvane and click <strong>Enable CPU sensors</strong> on the Overview page.</li>
-    <li>Approve the Windows permission prompt (UAC).</li>
-    <li>Taskvane restarts as administrator, installs PawnIO if it isn't installed yet, and the CPU readings appear within a few seconds.</li>
+    <li>Open Taskvane and click <strong>Enable CPU sensors</strong> on the Overview page. It opens <a href="https://pawnio.eu/">pawnio.eu</a>, PawnIO's official site.</li>
+    <li>Download and run PawnIO's installer from there. Taskvane notices when it's installed.</li>
+    <li>Click <strong>Restart as administrator</strong> and approve the Windows permission prompt (UAC). The CPU readings appear within a few seconds.</li>
   </ol>
-  <p>If you used the installer and kept its CPU sensors options ticked, this is already done. Without administrator mode you still get GPU temperatures, all usage numbers and battery power draw.</p>
+  <p>Taskvane doesn't bundle PawnIO: it's GPL-3.0 software, and PawnIO's signed driver is distributed by its author, so you get it from the source. If you kept the installer's <strong>Always start as administrator</strong> option, the last step happens by itself next time you open Taskvane. Without administrator mode you still get GPU temperatures, all usage numbers and battery power draw.</p>
 
   <h2 id="always-admin">Starting as administrator without a prompt</h2>
   <p>Turn on <strong>Settings &gt; Always start as administrator</strong> (available while Taskvane is running as administrator). Taskvane registers an elevated scheduled task, which is how monitoring tools like HWiNFO avoid a UAC prompt every time. After that, opening Taskvane normally starts it with administrator rights straight away, including at sign-in if <strong>Launch when Windows starts</strong> is on.</p>
@@ -61,14 +61,14 @@ import { SITE } from '../lib/site';
 
   <h2 id="troubleshooting">Troubleshooting</h2>
   <h3>CPU temperature still shows a dash</h3>
-  <p>Check the bottom-left corner of the window says <strong>Administrator mode</strong>. If it does, open <strong>Settings &gt; CPU sensor driver</strong>: it should say PawnIO is installed. If it is and readings still don't appear, restart Windows once; a driver update can need a reboot.</p>
+  <p>Check the bottom-left corner of the window says <strong>Administrator mode</strong>. If it does, open <strong>Settings &gt; CPU sensor driver</strong>: it should say PawnIO is installed (if not, get it from <a href="https://pawnio.eu/">pawnio.eu</a>). If it is and readings still don't appear, restart Windows once; a driver update can need a reboot.</p>
   <h3>The window is blank</h3>
   <p>Taskvane draws its interface with Microsoft Edge WebView2. Install the <a href="https://developer.microsoft.com/microsoft-edge/webview2/">WebView2 Runtime</a> and start Taskvane again.</p>
   <h3>Something else</h3>
   <p>Open <strong>Settings &gt; Sensor engine &gt; Open log</strong>, then <a href={`${SITE.repo}/issues/new/choose`}>open an issue on GitHub</a> with the end of the log, your Windows version and your hardware.</p>
 
   <h2 id="uninstall">Uninstalling</h2>
-  <p>Open Windows <strong>Settings &gt; Apps &gt; Installed apps</strong>, find Taskvane and choose <strong>Uninstall</strong>. This removes the app, its shortcuts and its scheduled tasks; you're asked whether to delete your settings too. PawnIO stays installed because other monitoring tools may use it. Remove it from the same list if you no longer need it. For the portable version, just delete its folder.</p>
+  <p>Open Windows <strong>Settings &gt; Apps &gt; Installed apps</strong>, find Taskvane and choose <strong>Uninstall</strong>. This removes the app, its shortcuts and its scheduled tasks; you're asked whether to delete your settings too. PawnIO, which you installed separately, isn't touched. Remove it from the same list if you no longer need it. For the portable version, just delete its folder.</p>
 </Page>
 
 <style>

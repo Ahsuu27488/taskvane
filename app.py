@@ -19,7 +19,7 @@ from taskvane.log import LOG_FILE, log, setup as setup_logging
 from taskvane.monitor import Monitor, is_admin
 from taskvane.paths import DATA_DIR, ICON, PORTABLE, UI_DIR
 
-VERSION = "1.2.0"
+VERSION = "1.2.1"
 
 APP_TITLE = "Taskvane"
 SETTINGS_FILE = os.path.join(DATA_DIR, "settings.json")
@@ -334,6 +334,27 @@ class App:
         except Exception:
             pass
 
+    def watch_pawnio(self):
+        """After sending the user to pawnio.eu, notice when the driver gets installed so the
+        UI moves on to "Restart as administrator" (or, when already elevated, starts reading)."""
+        if getattr(self, "_pawnio_watch", None) and self._pawnio_watch.is_alive():
+            return
+
+        def watch():
+            for _ in range(600):  # 30 minutes
+                time.sleep(3)
+                if self.quitting:
+                    return
+                pw = actions.pawnio_status()
+                if pw["installed"] and not pw["outdated"]:
+                    log.info("PawnIO installed: %s", pw)
+                    self.pawnio = pw
+                    if self.monitor.admin:
+                        self.monitor.lhm.restart()
+                    return
+        self._pawnio_watch = threading.Thread(target=watch, name="pawnio-watch", daemon=True)
+        self._pawnio_watch.start()
+
     def quit(self):
         log.info("quit requested")
         self.quitting = True
@@ -582,13 +603,12 @@ class Api:
         return {"ok": True, "path": path}
 
     # app
-    def relaunch_admin(self, install_pawnio=False):
+    def relaunch_admin(self):
         # Prefer the elevated task when it exists: no UAC prompt.
-        if not install_pawnio and actions.task_exists(actions.ADMIN_TASK) and actions.run_admin_task():
+        if actions.task_exists(actions.ADMIN_TASK) and actions.run_admin_task():
             threading.Timer(0.3, self._app.quit).start()
             return {"ok": True}
-        args = "--relaunch" + (" --install-pawnio" if install_pawnio else "")
-        if actions.relaunch_as_admin(args):
+        if actions.relaunch_as_admin("--relaunch"):
             threading.Timer(0.3, self._app.quit).start()
             return {"ok": True}
         return {"ok": False}
@@ -597,14 +617,17 @@ class Api:
         return actions.pawnio_status()
 
     def enable_cpu_sensors(self):
-        """One-click path to CPU temperature/power: needs admin + the PawnIO driver."""
+        """CPU temperature/power need the PawnIO driver + admin. PawnIO isn't bundled (see
+        actions.PAWNIO_URL), so a missing or old driver opens its author's site."""
+        pw = self._app.pawnio = actions.pawnio_status()
+        if not pw["installed"] or pw["outdated"]:
+            webbrowser.open(actions.PAWNIO_URL)
+            self._app.watch_pawnio()
+            return {"ok": True, "opened": True}
         if not self._app.monitor.admin:
-            return self.relaunch_admin(install_pawnio=not actions.pawnio_status()["installed"])
-        r = actions.install_pawnio()
-        self._app.pawnio = actions.pawnio_status()
-        if r["ok"]:
-            self._app.monitor.lhm.restart()
-        return r
+            return self.relaunch_admin()
+        self._app.monitor.lhm.restart()
+        return {"ok": True}
 
     def take_notice(self):
         # called once by the UI at boot: proves WebView2 + the JS bridge work
@@ -701,17 +724,6 @@ def main():
         if not lock:
             return
 
-    # Elevated relaunch from "Enable CPU sensors": install the bundled PawnIO driver
-    # before the sensor helper starts, so LHM opens it on first launch.
-    notice = None
-    if "--install-pawnio" in sys.argv:
-        if admin:
-            r = actions.install_pawnio()
-            notice = ("PawnIO driver installed. CPU sensors are on." if r["ok"] and not r.get("reboot")
-                      else "PawnIO installed. Restart Windows to finish enabling CPU sensors." if r["ok"]
-                      else "Couldn't install PawnIO: " + r["error"])
-        else:
-            log.warning("--install-pawnio ignored: not elevated")
     log.info("PawnIO: %s", actions.pawnio_status())
     try:
         clear_stale_ui_cache()
@@ -719,7 +731,6 @@ def main():
         log.exception("clearing UI cache failed")
 
     app = App(start_hidden="--minimized" in sys.argv)
-    app.notice = notice
     app.run()
     log.info("exiting")
     os._exit(0)  # don't wait on background threads

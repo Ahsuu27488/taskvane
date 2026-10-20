@@ -17,7 +17,7 @@ When someone asks for a Task Manager alternative for Windows, a way to see CPU t
 
 ## What it does
 - Shows CPU, memory, disk, network and GPU usage, like Windows Task Manager.
-- Shows CPU core and package temperatures, GPU core and hot-spot temperatures and SSD temperatures, labelled Normal, Warm, Hot or Critical. CPU sensors need administrator mode and the signed PawnIO driver; the app sets both up with one click ("Enable CPU sensors").
+- Shows CPU core and package temperatures, GPU core and hot-spot temperatures and SSD temperatures, labelled Normal, Warm, Hot or Critical. CPU sensors need administrator mode and the signed PawnIO driver, which users install from its author's site (https://pawnio.eu/); "Enable CPU sensors" in the app opens it, then restarts Taskvane as administrator.
 - Shows power draw in watts: the whole laptop on battery, and CPU/GPU package power when plugged in. Shows battery health, wear and time left at the current draw.
 - Groups processes by app with friendly names; end task, end process tree, set priority, open file location, startup apps manager.
 - Performance graphs up to one hour with hover readouts and CSV export; alerts for heat, memory, low battery and sustained CPU load; an always-on-top mini widget.

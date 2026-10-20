@@ -35,7 +35,7 @@ const statusPill = s => s ? `<span class="status"><span class="dot" style="backg
 const meter = (p, color) => `<div class="meter"><i style="width:${Math.max(0, Math.min(100, p || 0))}%;background:${color}"></i></div>`;
 const row = (k, v, extra = '') => `<div class="r"><span class="k" title="${esc(k)}">${esc(k)}</span><span class="v">${v}</span>${extra}</div>`;
 
-function toast(msg) { const t = $('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 3200); }
+function toast(msg, ms = 3200) { const t = $('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), ms); }
 
 // ---------------------------------------------------------------- navigation
 function go(p) {
@@ -118,12 +118,10 @@ function cpuSensorState() {
   if (!S.lhm.ok) return `<div class="grow"><b>The sensor engine couldn't start.</b> <span class="hint">${esc(S.lhm.error)}</span></div><button class="btn" data-act="openLog">Open log</button>`;
   if (S.hw.cpu_temp != null) return null;                       // all good
   if (!S.lhm.count) return null;                                // helper still warming up
-  if (!S.admin && !pw.installed)
-    return `<div class="grow"><b>CPU temperature and CPU power are off.</b> <span class="hint">Turning them on restarts Taskvane as administrator and installs the signed PawnIO hardware driver (one time).</span></div>${bannerBtn('Enable CPU sensors', 'cpuSensors')}`;
+  if (!pw.installed || pw.outdated)
+    return `<div class="grow"><b>${pw.outdated ? 'CPU sensors need a newer PawnIO driver.' : 'CPU temperature and CPU power are off.'}</b> <span class="hint">They need the free, signed PawnIO driver. ${pw.outdated ? 'Update' : 'Install'} it from its author's site (pawnio.eu), then restart Taskvane as administrator.</span></div>${bannerBtn(pw.outdated ? 'Update PawnIO' : 'Enable CPU sensors', 'cpuSensors')}`;
   if (!S.admin)
     return `<div class="grow"><b>CPU temperature and CPU power need administrator mode.</b> <span class="hint">The PawnIO driver is installed; Windows only lets elevated apps use it.</span></div>${bannerBtn('Restart as administrator', 'admin')}`;
-  if (!pw.installed || pw.outdated)
-    return `<div class="grow"><b>${pw.outdated ? 'The PawnIO driver is outdated.' : 'The PawnIO driver is missing.'}</b> <span class="hint">LibreHardwareMonitor needs it to read CPU sensors.</span></div>${bannerBtn(pw.outdated ? 'Update PawnIO' : 'Install PawnIO', 'cpuSensors')}`;
   return `<div class="grow"><b>CPU sensors aren't reporting.</b> <span class="hint">Running as administrator with PawnIO ${esc(pw.version || '')} installed, but no CPU readings yet. If this persists, restart Windows.</span></div><button class="btn" data-act="openLog">Open log</button>`;
 }
 
@@ -619,14 +617,15 @@ $('unitSeg').onclick = async e => { const b = e.target.closest('button'); if (!b
 document.addEventListener('click', async e => {
   const a = e.target.closest('[data-act]'); if (!a) return;
   const act = a.dataset.act;
-  if (act === 'admin') { const r = await api.relaunch_admin(false); if (!r.ok) toast('Administrator restart was cancelled.'); }
+  if (act === 'admin') { const r = await api.relaunch_admin(); if (!r.ok) toast('Administrator restart was cancelled.'); }
   if (act === 'cpuSensors') {
     a.disabled = true;
-    toast(S?.admin ? 'Installing the PawnIO driver…' : 'Restarting as administrator…');
     const r = await api.enable_cpu_sensors();
     a.disabled = false;
-    if (!r.ok) toast(r.error || 'Administrator restart was cancelled.');
-    else if (S?.admin) toast(r.reboot ? 'PawnIO installed. Restart Windows to finish.' : 'PawnIO installed. CPU sensors are starting…');
+    if (r.opened) toast("Opened pawnio.eu. Install PawnIO from its author's site, then restart Taskvane as administrator.", 9000);
+    else if (!r.ok) toast('Administrator restart was cancelled.');
+    else if (S?.admin) toast('CPU sensors are starting…');
+    else toast('Restarting as administrator…');
   }
   if (act === 'openLog') api.open_log();
   if (act === 'export') { const r = await api.export_history(); if (r.ok) toast('Saved ' + r.path); else if (r.error) toast(r.error); }
@@ -647,9 +646,9 @@ function renderSettingsInfo() {
     : 'Not available: ' + S.lhm.error;
   $('aboutVersion').textContent = 'Version ' + S.version;
   const pw = S.pawnio || {};
-  $('pawnioDesc').textContent = pw.installed ? `Installed${pw.version ? ' · version ' + pw.version : ''}${pw.outdated ? ' · update available' : ''}` : 'Not installed. Needed for CPU temperature and CPU power.';
+  $('pawnioDesc').textContent = pw.installed ? `Installed${pw.version ? ' · version ' + pw.version : ''}${pw.outdated ? ' · update available' : ''}` : "Not installed. Needed for CPU temperature and CPU power; install it from its author's site.";
   $('pawnioBtn').hidden = pw.installed && !pw.outdated;
-  $('pawnioBtn').textContent = pw.outdated ? 'Update' : 'Install';
+  $('pawnioBtn').textContent = pw.outdated ? 'Update at pawnio.eu' : 'Get it at pawnio.eu';
 }
 
 // ---------------------------------------------------------------- boot

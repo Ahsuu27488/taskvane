@@ -19,7 +19,6 @@ python -m PyInstaller --noconfirm --clean --windowed --name Taskvane `
     --add-data "ui;ui" `
     --add-data "assets;assets" `
     --add-data "lib\lhm;lib\lhm" `
-    --add-data "lib\pawnio;lib\pawnio" `
     --add-data "THIRD_PARTY_NOTICES.md;." `
     --add-data "taskvane\lhm_host.ps1;taskvane" `
     --collect-submodules webview `
@@ -47,8 +46,9 @@ Taskvane $version - portable
 Run Taskvane.exe. Nothing is installed: settings and logs are kept in the "data" folder
 next to it. Delete this folder to remove everything.
 
-CPU temperature and CPU power need administrator mode and the PawnIO driver. Click
-"Enable CPU sensors" in the app to set both up (one UAC prompt).
+CPU temperature and CPU power need the free PawnIO driver and administrator mode.
+Install PawnIO from its author's site, https://pawnio.eu/ ("Enable CPU sensors" in the
+app opens it), then restart Taskvane as administrator.
 
 If Windows SmartScreen says "Windows protected your PC", click "More info", then "Run anyway".
 "@ | Set-Content -Encoding UTF8 (Join-Path $root 'portable.txt')

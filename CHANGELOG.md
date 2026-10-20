@@ -1,7 +1,9 @@
 # Changelog
 
-## Unreleased
+## 1.2.1
 
+- **PawnIO is no longer bundled.** CPU temperature and CPU power still use the signed PawnIO driver, but you now install it from its author's site, https://pawnio.eu/. **Enable CPU sensors** opens that page; Taskvane notices when PawnIO is installed and then offers to restart as administrator. Why: Taskvane is GPL-3.0, and shipping it together with a signed, proprietary driver build conflicts with GPL-3 (PawnIO's author pointed this out; other GPL-3 apps such as OpenRGB do the same). If PawnIO is already installed, nothing changes for you.
+- The installer no longer has an "Install the PawnIO driver" option, and upgrading removes the old bundled PawnIO setup file
 - Website works properly on phones: new menu button, temperature scale labels no longer overlap, comparison tables show both columns, readable screenshots
 - Website: "Also in Taskvane" section and a "Send link to my PC" button for phone visitors
 - winget and Scoop manifests in `packaging/`; Scoop bucket at github.com/Ahsuu27488/scoop-bucket

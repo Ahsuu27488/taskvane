@@ -10,7 +10,7 @@ Thanks for helping! Bug reports, ideas and pull requests are all welcome.
 
 ```powershell
 pip install -r requirements.txt
-powershell -ExecutionPolicy Bypass -File tools\fetch_deps.ps1   # downloads + verifies LibreHardwareMonitor and PawnIO into lib\
+powershell -ExecutionPolicy Bypass -File tools\fetch_deps.ps1   # downloads + verifies LibreHardwareMonitor into lib\
 python app.py                 # run from source
 python app.py --debug         # with WebView2 DevTools
 powershell -ExecutionPolicy Bypass -File build.ps1 -Release    # exe + portable zip + installer
@@ -26,7 +26,7 @@ Python 3.12+ on Windows 10/11 x64. Building the installer needs Inno Setup 6 (`w
 | `taskvane/monitor.py` | Background collectors (system, processes, sensors) and the 1-hour history |
 | `taskvane/ntproc.py` | Every process's counters in one `NtQuerySystemInformation` call, the same source Task Manager uses (~15 ms for 250 processes) |
 | `taskvane/lhm.py` + `lhm_host.ps1` | LibreHardwareMonitorLib runs in a separate Windows PowerShell 5.1 helper (it needs .NET Framework) that streams JSON. Out of process, so a driver/.NET fault can't crash the app; it's restarted automatically |
-| `taskvane/actions.py` | Process actions, startup apps, PawnIO install, elevated scheduled tasks, autostart |
+| `taskvane/actions.py` | Process actions, startup apps, PawnIO detection, elevated scheduled tasks, autostart |
 | `ui/` | The interface: plain HTML/CSS/JS, no framework, no build step |
 | `installer/Taskvane.iss` | Inno Setup installer |
 | `tools/fetch_deps.ps1` | Pinned, SHA-256-verified third-party downloads (not committed to the repo) |

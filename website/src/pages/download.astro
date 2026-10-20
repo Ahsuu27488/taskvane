@@ -33,7 +33,7 @@ const rel = await getRelease();
     <pre><code>Get-FileHash .\{rel.setup.name} -Algorithm SHA256</code></pre>
 
     <h2>Turning on CPU temperature and power</h2>
-    <p>Windows only shows CPU sensors to apps running as administrator, through a signed driver called PawnIO. The installer offers to set this up. In the portable version, click <strong>Enable CPU sensors</strong> in the app; it asks for permission once. <a href="/docs/#cpu-sensors">More about how this works</a>.</p>
+    <p>Windows only shows CPU sensors to apps running as administrator, through a signed driver called PawnIO. Taskvane doesn't bundle PawnIO; install it from its author's site, <a href="https://pawnio.eu/">pawnio.eu</a> (<strong>Enable CPU sensors</strong> in the app opens it), then restart Taskvane as administrator. <a href="/docs/#cpu-sensors">More about how this works</a>.</p>
 
     <h2>Code signing policy</h2>
     <p>Releases are built by GitHub Actions from the public source. We're applying for free code signing provided by SignPath.io, certificate by SignPath Foundation. Taskvane sends nothing over the network. Read the <a href="/code-signing/">code signing policy and privacy policy</a>.</p>

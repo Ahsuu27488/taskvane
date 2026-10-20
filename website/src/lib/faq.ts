@@ -23,7 +23,7 @@ export const FAQ: { q: string; a: string }[] = [
   },
   {
     q: 'What is PawnIO and is it safe?',
-    a: 'PawnIO is a small, digitally signed hardware driver used by LibreHardwareMonitor and other monitoring tools to read CPU sensors. Taskvane installs it only if you choose to, from the official signed installer, and you can remove it any time from Settings > Apps.',
+    a: "PawnIO is a small, digitally signed hardware driver used by LibreHardwareMonitor and other monitoring tools to read CPU sensors. Taskvane doesn't bundle it: you install it yourself from its author's site, pawnio.eu (the Enable CPU sensors button opens it), and you can remove it any time from Settings > Apps.",
   },
   {
     q: 'Will Taskvane slow down my PC?',
@@ -43,6 +43,6 @@ export const FAQ: { q: string; a: string }[] = [
   },
   {
     q: 'How do I uninstall Taskvane?',
-    a: 'Open Settings > Apps > Installed apps in Windows, find Taskvane and choose Uninstall. This removes the app, its shortcuts and its scheduled tasks. The PawnIO driver stays installed because other tools may use it; uninstall it separately if you want.',
+    a: "Open Settings > Apps > Installed apps in Windows, find Taskvane and choose Uninstall. This removes the app, its shortcuts and its scheduled tasks. It doesn't touch the PawnIO driver, which you installed separately; uninstall it from the same list if you want.",
   },
 ];

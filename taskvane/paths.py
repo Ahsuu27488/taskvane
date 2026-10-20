@@ -6,7 +6,6 @@ BASE = getattr(sys, "_MEIPASS", os.path.dirname(os.path.dirname(os.path.abspath(
 UI_DIR = os.path.join(BASE, "ui")
 LHM_DIR = os.path.join(BASE, "lib", "lhm")
 PKG_DIR = os.path.join(BASE, "taskvane")
-PAWNIO_SETUP = os.path.join(BASE, "lib", "pawnio", "PawnIO_setup.exe")
 ICON = os.path.join(BASE, "assets", "icon.ico")
 APP_DIR = os.path.dirname(sys.executable) if getattr(sys, "frozen", False) else os.path.dirname(BASE + os.sep)
 

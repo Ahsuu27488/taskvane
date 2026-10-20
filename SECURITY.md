@@ -1,6 +1,6 @@
 # Security policy
 
-Taskvane can run with administrator rights and installs a kernel driver (PawnIO) when you choose to, so security reports are taken seriously.
+Taskvane can run with administrator rights and uses a kernel driver (PawnIO, which users install from its author's site), so security reports are taken seriously.
 
 ## Reporting a vulnerability
 

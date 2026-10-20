@@ -2,9 +2,10 @@ Taskvane shows live CPU, GPU, memory, disk and network usage, temperatures and p
 
 What gets installed
   - Taskvane, in Program Files, with a Start menu shortcut.
-  - Optional: the PawnIO driver. It's a small, digitally signed hardware driver that lets Taskvane (and LibreHardwareMonitor) read CPU temperature and CPU power. You can remove it any time from Settings > Apps.
   - Optional: "Always start as administrator". This creates a scheduled task, so Taskvane can read CPU sensors without a UAC prompt each time it starts.
 
-Uninstalling removes Taskvane and its scheduled tasks. PawnIO stays installed because other monitoring tools may use it; uninstall it separately from Settings > Apps if you want.
+CPU temperature and CPU power also need the PawnIO driver, a small, digitally signed hardware driver used by LibreHardwareMonitor and other monitoring tools. It isn't included: install it from its author's site, https://pawnio.eu/ (the "Enable CPU sensors" button in Taskvane opens it).
+
+Uninstalling removes Taskvane and its scheduled tasks. It doesn't touch PawnIO; uninstall that separately from Settings > Apps if you want.
 
 Requirements: Windows 10 (version 1809 or later) or Windows 11, 64-bit.
