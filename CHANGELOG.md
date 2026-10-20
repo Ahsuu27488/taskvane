@@ -4,7 +4,7 @@
 
 - **Update notifications.** Once a day Taskvane asks GitHub for the latest version number and, when there's a newer one, shows a banner on the Overview page ("Taskvane X.Y.Z is available") with **What's new**, **Download** and **Skip this version**, plus one Windows notification per new version. It only tells you: nothing is downloaded or installed. The request carries no personal data, and **Settings > Check for updates** turns it off (then Taskvane makes no network requests at all). winget and Scoop users can keep using `winget upgrade` / `scoop update`.
 - Privacy wording on the website, README and SECURITY.md now describes this check instead of saying nothing leaves your PC
-- Website: new **Guides** section (taskvane.ahsandev.site/guides/) with plain-English how-tos: checking CPU and GPU temperature on Windows 11, normal CPU temperatures, battery health, laptop power draw in watts, and finding what makes a laptop hot. They go live in pairs on 21, 24 and 27 October
+- Website: new **Guides** section (taskvane.ahsandev.site/guides/) with plain-English how-tos: checking CPU and GPU temperature on Windows 11, normal CPU temperatures, battery health, laptop power draw in watts, and finding what makes a laptop hot, plus an honest roundup of Task Manager alternatives, disabling startup apps, watching CPU temperature while gaming, and logging CPU temperature over time. They go live in pairs on 21, 24, 27 and 30 October and 2 November
 - Website: `/sitemap.xml` now works (it points to the sitemap index)
 
 ## 1.2.1

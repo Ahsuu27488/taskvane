@@ -1,6 +1,6 @@
 # Status
 
-_Last updated: 2026-10-20 (update notifications on main; PawnIO unbundled in 1.2.1)_
+_Last updated: 2026-10-20 (guides 7-10 scheduled for 30 Oct and 2 Nov; update notifications on main; PawnIO unbundled in 1.2.1)_
 
 ## Live
 
@@ -37,10 +37,12 @@ _Last updated: 2026-10-20 (update notifications on main; PawnIO unbundled in 1.2
 ## Website guides (2026-10-20, scheduled)
 
 - `/guides/` section: Astro content collection `website/src/content/guides/*.md` (schema in `content.config.ts`), template `pages/guides/[slug].astro` (Article + FAQPage + BreadcrumbList JSON-LD, FAQ, download box, related guides, compare link), index page, `llms.txt` section, `/sitemap.xml` → sitemap index.
-- **Scheduled publishing:** a guide is built only once its `published` date has come (`src/lib/guides.ts`); links to not-yet-live guides are unwrapped to plain text after the build (`astro.config.mjs`); the Guides menu link and `llms.txt` section appear once at least one guide is live. `website.yml` rebuilds daily at 05:00 UTC (10:00 PKT) and pings IndexNow (Bing/Yandex) with pages that are new compared with the live sitemap. Test any day with `GUIDES_NOW=2026-10-24 npx astro build` (`C:\dev\taskvane-guides\test_dates.py` checks 4 dates for dead links).
-- Schedule: 21 Oct CPU temperature + normal CPU temperature; 24 Oct GPU temperature + battery health; 27 Oct laptop power draw + overheating.
-- Written by Gemini 3.8 Flash (High) workers via Foreman from fact sheets taken from the app's code; every claim reviewed and fixed by Claude (each draft had ~1 invented detail). Briefs + scripts: `C:\dev\taskvane-guides` (local).
-- Next: guides 7–10 from the owner's SEO brief (alternatives roundup, startup apps, CPU temp while gaming, logging over time); request indexing in Search Console after each batch goes live (optional, Google also reads the sitemap).
+- **Scheduled publishing:** a guide is built only once its `published` date has come (`src/lib/guides.ts`); links to not-yet-live guides are unwrapped to plain text after the build (`astro.config.mjs`); the Guides menu link and `llms.txt` section appear once at least one guide is live. `website.yml` rebuilds daily at 05:00 UTC (10:00 PKT) and pings IndexNow (Bing/Yandex) with pages that are new compared with the live sitemap. Test any day with `GUIDES_NOW=2026-10-24 npx astro build` (`C:\dev\taskvane-guides\test_dates.py` checks 6 dates for dead links).
+- Schedule: 21 Oct CPU temperature + normal CPU temperature; 24 Oct GPU temperature + battery health; 27 Oct laptop power draw + overheating; 30 Oct Task Manager alternatives roundup + disabling startup apps; 2 Nov CPU temperature while gaming + logging CPU temperature over time. That completes the 10 guides of the owner's SEO brief.
+- Written by Gemini 3.8 Flash (High) workers via Foreman from fact sheets taken from the app's code; every claim reviewed and fixed by Claude (guides 1 to 6 had ~1 invented detail each; guides 7 to 10 had several: made-up RAM and CPU figures, the mini widget "showing battery health", a CPU temperature graph that doesn't exist, overclaims about other tools). Briefs + scripts: `C:\dev\taskvane-guides` (local; `make_briefs_7-10.py`, `fix_*.py`, `lint_guide.py`).
+- Writing about Taskvane: there is **no CPU temperature graph**. CPU temperature is recorded every second and is in the CSV export; only GPU temperature has a graph. `laptop-overheating-causes.md` (live 27 Oct) implies the Performance page shows how long the CPU has been hot: worth a one-line fix.
+- No screenshot of the Startup apps page or the mini widget exists on the site yet; guides 8 and 9 have none. Adding `startup-*.webp` and a mini widget capture would help those two pages.
+- Next: request indexing in Search Console after each batch goes live (optional, Google also reads the sitemap).
 
 ## Next steps
 
