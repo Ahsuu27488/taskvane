@@ -26,7 +26,7 @@ import { SITE } from '../lib/site';
     <li>Download and run PawnIO's installer from there. Taskvane notices when it's installed.</li>
     <li>Click <strong>Restart as administrator</strong> and approve the Windows permission prompt (UAC). The CPU readings appear within a few seconds.</li>
   </ol>
-  <p>Taskvane doesn't bundle PawnIO: it's GPL-3.0 software, and PawnIO's signed driver is distributed by its author, so you get it from the source. If you kept the installer's <strong>Always start as administrator</strong> option, the last step happens by itself next time you open Taskvane. Without administrator mode you still get GPU temperatures, all usage numbers and battery power draw.</p>
+  <p>Taskvane doesn't bundle PawnIO: it's GPL-3.0 software, and PawnIO's signed driver is distributed by its author, so you get it from the source. If you kept the installer's <strong>Always start as administrator</strong> option, the last step happens by itself next time you open Taskvane. Without administrator mode you still get GPU temperatures, all usage numbers and battery power draw. For step-by-step instructions, see our guide on <a href="/guides/check-cpu-temperature-windows-11/">how to check CPU temperature on Windows 11</a>.</p>
 
   <h2 id="always-admin">Starting as administrator without a prompt</h2>
   <p>Turn on <strong>Settings &gt; Always start as administrator</strong> (available while Taskvane is running as administrator). Taskvane registers an elevated scheduled task, which is how monitoring tools like HWiNFO avoid a UAC prompt every time. After that, opening Taskvane normally starts it with administrator rights straight away, including at sign-in if <strong>Launch when Windows starts</strong> is on.</p>

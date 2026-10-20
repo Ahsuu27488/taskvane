@@ -7,7 +7,7 @@ export const FAQ: { q: string; a: string }[] = [
   },
   {
     q: 'How do I see my CPU temperature on Windows 11?',
-    a: "Windows 11 Task Manager doesn't show CPU temperature. Install Taskvane, open it, and click Enable CPU sensors. Taskvane then shows the temperature of every CPU core and the CPU package, and labels each reading Normal, Warm, Hot or Critical.",
+    a: "Windows 11 Task Manager doesn't show CPU temperature. Install Taskvane, open it, and click Enable CPU sensors: it opens pawnio.eu, where you install the free PawnIO driver, and then Taskvane restarts as administrator. It then shows the temperature of every CPU core and the CPU package, and labels each reading Normal, Warm, Hot or Critical.",
   },
   {
     q: 'How do I check how many watts my laptop is using?',

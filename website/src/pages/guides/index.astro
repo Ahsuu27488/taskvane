@@ -1,0 +1,50 @@
+---
+import Page from '../../layouts/Page.astro';
+import { getCollection } from 'astro:content';
+import { SITE } from '../../lib/site';
+
+const guides = (await getCollection('guides')).sort(
+  (a, b) => b.data.published.getTime() - a.data.published.getTime()
+);
+
+const formatDate = (d: Date) =>
+  d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+
+const itemListSchema = {
+  '@type': 'ItemList',
+  itemListElement: guides.map((g, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    url: new URL(`/guides/${g.id}/`, SITE.url).href,
+    name: g.data.title,
+  })),
+};
+---
+<Page
+  title="Taskvane guides: Windows 11 CPU temperature, cooling and hardware"
+  h1="Guides"
+  lede="Practical guides to checking hardware temperatures, understanding normal operating ranges, and troubleshooting heat on Windows 11."
+  description="Guides on checking CPU temperature on Windows 11, normal temperature ranges, thermal throttling, and hardware monitoring."
+  crumbs={[{ name: 'Guides', path: '/guides/' }]}
+  schema={[itemListSchema]}
+>
+  <div class="guides-list">
+    {guides.map((g) => (
+      <article class="guide-card">
+        <h2><a href={`/guides/${g.id}/`}>{g.data.title}</a></h2>
+        <p class="promise">{g.data.promise}</p>
+        <p class="meta">Updated {formatDate(g.data.updated)}</p>
+      </article>
+    ))}
+  </div>
+</Page>
+
+<style>
+  .guides-list { display: grid; gap: 32px; border-top: 1px solid var(--rule); padding-top: 32px; }
+  .guide-card { border-bottom: 1px solid var(--rule); padding-bottom: 32px; }
+  .guide-card h2 { font-size: clamp(24px, 3.2vw, 34px); margin-bottom: 10px; }
+  .guide-card h2 a { text-decoration: none; color: var(--ink); }
+  .guide-card h2 a:hover { color: var(--blue); }
+  .promise { font-size: 17px; color: var(--slate); margin-bottom: 10px; max-width: 44em; }
+  .meta { font-size: 14px; color: var(--slate); margin: 0; }
+</style>

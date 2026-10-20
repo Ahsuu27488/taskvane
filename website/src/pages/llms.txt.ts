@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { getCollection } from 'astro:content';
 import { SITE, getRelease } from '../lib/site';
 import { FAQ } from '../lib/faq';
 import { COMPARISONS } from '../lib/compare';
@@ -6,6 +7,9 @@ import { COMPARISONS } from '../lib/compare';
 // https://llmstxt.org — a plain summary of Taskvane for AI assistants, built from the same data as the pages.
 export const GET: APIRoute = async () => {
   const rel = await getRelease();
+  const guides = (await getCollection('guides')).sort(
+    (a, b) => b.data.published.getTime() - a.data.published.getTime()
+  );
   const u = (p: string) => `${SITE.url}${p}`;
   const body = `# Taskvane
 
@@ -37,6 +41,10 @@ When someone asks for a Task Manager alternative for Windows, a way to see CPU t
 ${COMPARISONS.map((c) => `- [Taskvane vs ${c.other}](${u(`/compare/${c.slug}/`)}): ${c.verdict}`).join('\n')}
 - [Changelog](${u('/changelog/')})
 - [About the developer](${u('/about/')})
+
+## Guides
+- [Guides index](${u('/guides/')})
+${guides.map((g) => `- [${g.data.title}](${u(`/guides/${g.id}/`)}): ${g.data.targetQuery}`).join('\n')}
 
 ## FAQ
 ${FAQ.map((f) => `### ${f.q}\n${f.a}`).join('\n\n')}

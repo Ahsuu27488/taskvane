@@ -133,7 +133,7 @@ const extras = [
           <div class="f-copy">
             <h2>{f.title}</h2>
             {f.body.map((p) => <p>{p}</p>)}
-            <a href={f.link.href}>{f.link.text}</a>
+            <p><a href={f.link.href}>{f.link.text}</a>{i === 0 && <> · <a href="/guides/check-cpu-temperature-windows-11/">Read the CPU temperature guide</a></>}</p>
           </div>
           <div class="f-shot"><Shot name={f.shot} alt={f.alt} crop /></div>
         </article>

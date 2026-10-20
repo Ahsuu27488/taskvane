@@ -1,0 +1,123 @@
+---
+import Page from '../../layouts/Page.astro';
+import { getCollection, render } from 'astro:content';
+import { SITE, APP_VERSION } from '../../lib/site';
+import { COMPARISONS } from '../../lib/compare';
+
+export async function getStaticPaths() {
+  const guides = await getCollection('guides');
+  return guides.map((guide) => ({
+    params: { slug: guide.id },
+    props: { guide },
+  }));
+}
+
+const { guide } = Astro.props;
+const { Content } = await render(guide);
+
+const allGuides = await getCollection('guides');
+const relatedGuides = (guide.data.related ?? [])
+  .map((slug) => allGuides.find((g) => g.id === slug))
+  .filter((g): g is NonNullable<typeof g> => Boolean(g));
+
+const compareInfo = guide.data.compare ? COMPARISONS.find((c) => c.slug === guide.data.compare) : undefined;
+
+const formattedDate = guide.data.updated.toLocaleDateString('en-US', {
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+
+const canonical = new URL(`/guides/${guide.id}/`, SITE.url).href;
+
+const articleSchema = {
+  '@type': 'Article',
+  headline: guide.data.title,
+  description: guide.data.description,
+  datePublished: guide.data.published.toISOString(),
+  dateModified: guide.data.updated.toISOString(),
+  author: { '@id': `${SITE.url}/about/#person` },
+  publisher: { '@id': `${SITE.url}/about/#person` },
+  mainEntityOfPage: canonical,
+  image: new URL('/img/og.png', SITE.url).href,
+};
+
+const faqSchema = {
+  '@type': 'FAQPage',
+  mainEntity: guide.data.faq.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.a,
+    },
+  })),
+};
+---
+<Page
+  title={guide.data.seoTitle}
+  h1={guide.data.title}
+  description={guide.data.description}
+  crumbs={[{ name: 'Guides', path: '/guides/' }, { name: guide.data.title, path: `/guides/${guide.id}/` }]}
+  schema={[articleSchema, faqSchema]}
+>
+  <p class="byline">Updated {formattedDate} · by Muhammad Ahsan</p>
+
+  <Content />
+
+  <section class="guide-faq">
+    <h2>Questions</h2>
+    {guide.data.faq.map((f) => (
+      <div class="faq-item">
+        <h3>{f.q}</h3>
+        <p>{f.a}</p>
+      </div>
+    ))}
+  </section>
+
+  <section class="download-box">
+    <p>Taskvane {APP_VERSION} · free and open source · Windows 10 and 11, 64-bit</p>
+    <a class="btn btn-primary" href="/download/">Download Taskvane</a>
+  </section>
+
+  {relatedGuides.length > 0 && (
+    <section class="related-guides">
+      <h2>Related guides</h2>
+      <ul>
+        {relatedGuides.map((r) => (
+          <li>
+            <a href={`/guides/${r.id}/`}>{r.data.title}</a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  {compareInfo && (
+    <p class="compare-line">
+      Comparing tools? See <a href={`/compare/${compareInfo.slug}/`}>Taskvane vs {compareInfo.other}</a>.
+    </p>
+  )}
+</Page>
+
+<style>
+  .byline { font-size: 15px; color: var(--slate); margin-top: -12px; margin-bottom: 28px; }
+  .guide-faq { margin-top: 48px; border-top: 1px solid var(--rule); padding-top: 24px; }
+  .faq-item { margin-bottom: 24px; }
+  .download-box {
+    margin: 44px 0;
+    padding: 24px 28px;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .download-box p { margin: 0; font-size: 16px; color: var(--slate); font-weight: 500; }
+  .related-guides { margin: 44px 0 24px; border-top: 1px solid var(--rule); padding-top: 24px; }
+  .compare-line { margin-top: 28px; font-size: 16px; color: var(--slate); }
+</style>

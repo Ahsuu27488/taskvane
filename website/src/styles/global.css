@@ -60,6 +60,9 @@ p { margin: 0 0 1em; }
 .prose pre { background: var(--ink); color: #e8eef5; padding: 16px 18px; border-radius: var(--radius-sm); overflow-x: auto; font-size: 15px; line-height: 1.5; }
 .prose pre code { background: none; padding: 0; color: inherit; }
 
+.shot { border-radius: 12px; box-shadow: 0 1px 0 #ffffff inset, 0 24px 60px -24px rgba(21, 34, 50, .45), 0 0 0 1px rgba(21, 34, 50, .12); background: #111214; }
+.prose .shot { margin: 28px 0 16px; }
+
 /* buttons */
 .btn {
   display: inline-flex; align-items: center; gap: 10px;
